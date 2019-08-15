@@ -1,0 +1,19 @@
+{
+    "name": "@keval/website",
+    "version": "1.0.0",
+    "description": "Personal website",
+    "author": "Keval Kapdee <keval@thechubbypanda.net>",
+    "license": "MIT",
+    "main": "server.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://git.thechubbypanda.net/keval/website.git"
+    },
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express": "^4.16.1",
+        "three": "^0.132.2"
+    }
+}

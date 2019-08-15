@@ -1,0 +1,47 @@
+kind: pipeline
+name: default
+
+clone:
+  disable: true
+
+steps:
+- name: clone
+  image: macjustice/git-lfs
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
+  environment:
+    GIT_SSL_NO_VERIFY: 1
+  commands:
+  - git clone --recursive $DRONE_GIT_HTTP_URL .
+
+- name: build
+  image: docker:latest
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
+  commands:
+  - docker build -t ${DRONE_REPO}:latest .
+
+- name: remove-old
+  image: docker:latest
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
+  failure: ignore
+  commands:
+  - docker stop ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}
+  - docker rm ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}
+
+- name: run
+  image: docker:latest
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
+  commands:
+  - docker run -d --label traefik.enable=true --label traefik.http.routers.keval_website.rule="Host(\`thechubbypanda.net\`, \`keval.kapdee.uk\`)" --network proxy --restart=always --name ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME} ${DRONE_REPO}:latest
+
+volumes:
+- name: dockersock
+  host:
+    path: /var/run/docker.sock

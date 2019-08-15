@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+.vscode/
+README.md
+Dockerfile
+.dockerignore
+LICENSE
+.gitmodules
+.drone.yml
+.gitignore
+.git/
+.gitattributes

@@ -1,0 +1,66 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+html {
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+html::-webkit-scrollbar {
+    width: 0; /* For Chrome, Safari, and Opera */
+}
+
+body {
+    margin: 0;
+    background-color: #1f1f1f;
+}
+
+header {
+    color: whitesmoke;
+    text-align: center;
+    font-size: 2em;
+    height: 100%;
+}
+
+header h1, header h5 {
+    font-family: 'Montserrat', 'Roboto', sans-serif;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header h5 {
+    margin-top: 0.5em;
+}
+
+a {
+    color: white;
+}
+
+canvas {
+    background-color: transparent;
+    position: fixed;
+}
+
+#title {
+    padding: 15px;
+}
+
+.socials {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    grid-column-gap: 10px;
+}
+
+.social {
+    font-size: 1.5em;
+}
+
+.centered-in-parent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
