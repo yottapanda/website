@@ -8,7 +8,10 @@ pipeline:
   publish:
     image: plugins/docker
     settings:
-      registry: reg.kapdee.uk
-      repo: reg.kapdee.uk/${CI_REPO}
+      registry: git.kapdee.uk
+      repo: git.kapdee.uk/${CI_REPO}
+      username: $CI_REPO_OWNER
+      password:
+        from_secret: registry_token
     when:
       branch: master
