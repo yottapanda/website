@@ -13,5 +13,6 @@ pipeline:
       username: $CI_REPO_OWNER
       password:
         from_secret: registry_token
+      purge: false
     when:
       branch: master
