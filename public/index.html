@@ -17,7 +17,7 @@
     <script>
         document.onload = function () {
             let emailLink = "mailto:keval@thechubbypanda.net";
-            if (window.location.href === "https://keval.kapdee.uk") {
+            if (window.location.href.includes("keval.kapdee.uk")) {
                 emailLink = "mailto:keval@kapdee.uk"
             }
             document.getElementById("email-link").href = emailLink;
