@@ -1,7 +1,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
 
     <title>Keval Kapdee</title>
 
@@ -12,34 +12,38 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-    
+
     <link rel="stylesheet" type="text/css" href="style.css">
     <script>
-        let emailLink = "mailto:keval@thechubbypanda.net";
-        if (window.location.href === "https://keval.kapdee.uk") {
-            emailLink = "mailto:keval@kapdee.uk"
+        document.onload = function () {
+            let emailLink = "mailto:keval@thechubbypanda.net";
+            if (window.location.href === "https://keval.kapdee.uk") {
+                emailLink = "mailto:keval@kapdee.uk"
+            }
+            document.getElementById("email-link").href = emailLink;
         }
-        document.getElementById("email-link").href = emailLink;
     </script>
 </head>
 
 <body>
-    <canvas id="canvas"></canvas>
-    <header>
-        <div id="title" class="centered-in-parent">
-            <h1>Keval Kapdee</h1>
-            <h5>thechubbypanda</h5>
-            <div class="socials">
-                <div><a class="social" href="" id="email-link"><i class="fas fa-envelope"></i></a></div>
-                <div><a class="social" href="https://github.com/thechubbypanda"><i class="fab fa-github"></i></a></div>
-                <div><a class="social" href="https://www.linkedin.com/in/keval-kapdee/"><i class="fab fa-linkedin"></i></a></div>
-                <div><a class="social" href="https://stackoverflow.com/users/4896472/thechubbypanda"><i class="fab fa-stack-overflow"></i></a></div>
+<canvas id="canvas"></canvas>
+<header>
+    <div id="title" class="centered-in-parent">
+        <h1>Keval Kapdee</h1>
+        <h5>thechubbypanda</h5>
+        <div class="socials">
+            <div><a class="social" href="mailto:keval@thechubbypanda.net" id="email-link"><i class="fas fa-envelope"></i></a></div>
+            <div><a class="social" href="https://github.com/thechubbypanda"><i class="fab fa-github"></i></a></div>
+            <div><a class="social" href="https://www.linkedin.com/in/keval-kapdee/"><i class="fab fa-linkedin"></i></a>
             </div>
+            <div><a class="social" href="https://stackoverflow.com/users/4896472/thechubbypanda"><i
+                    class="fab fa-stack-overflow"></i></a></div>
         </div>
-    </header>
-    <div id="content">
-
     </div>
+</header>
+<div id="content">
+
+</div>
 </body>
 
 <script type="module" src="./shader.js"></script>
