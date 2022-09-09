@@ -15,12 +15,10 @@
 
     <link rel="stylesheet" type="text/css" href="style.css">
     <script>
-        document.onload = function () {
-            let emailLink = "mailto:keval@thechubbypanda.net";
+        function setEmail() {
             if (window.location.href.includes("keval.kapdee.uk")) {
-                emailLink = "mailto:keval@kapdee.uk"
+                document.getElementById("email-link").href = "mailto:keval@kapdee.uk";
             }
-            document.getElementById("email-link").href = emailLink;
         }
     </script>
 </head>
@@ -32,12 +30,10 @@
         <h1>Keval Kapdee</h1>
         <h5>thechubbypanda</h5>
         <div class="socials">
-            <div><a class="social" href="mailto:keval@thechubbypanda.net" id="email-link"><i class="fas fa-envelope"></i></a></div>
+            <div><a class="social" href="mailto:keval@thechubbypanda.net" id="email-link" onload="setEmail();"><i class="fas fa-envelope"></i></a></div>
             <div><a class="social" href="https://github.com/thechubbypanda"><i class="fab fa-github"></i></a></div>
-            <div><a class="social" href="https://www.linkedin.com/in/keval-kapdee/"><i class="fab fa-linkedin"></i></a>
-            </div>
-            <div><a class="social" href="https://stackoverflow.com/users/4896472/thechubbypanda"><i
-                    class="fab fa-stack-overflow"></i></a></div>
+            <div><a class="social" href="https://www.linkedin.com/in/keval-kapdee/"><i class="fab fa-linkedin"></i></a></div>
+            <div><a class="social" href="https://stackoverflow.com/users/4896472/thechubbypanda"><i class="fab fa-stack-overflow"></i></a></div>
         </div>
     </div>
 </header>
