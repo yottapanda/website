@@ -14,13 +14,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script>
-        function setEmail() {
-            if (window.location.href.includes("keval.kapdee.uk")) {
-                document.getElementById("email-link").href = "mailto:keval@kapdee.uk";
-            }
-        }
-    </script>
 </head>
 
 <body>
@@ -30,10 +23,18 @@
         <h1>Keval Kapdee</h1>
         <h5>thechubbypanda</h5>
         <div class="socials">
-            <div><a class="social" href="mailto:keval@thechubbypanda.net" id="email-link" onload="setEmail();"><i class="fas fa-envelope"></i></a></div>
+            <div><a class="social" href="mailto:keval@thechubbypanda.net" id="email-link"><i
+                    class="fas fa-envelope"></i></a></div>
+            <script>
+                if (window.location.href.includes("keval.kapdee.uk")) {
+                    document.getElementById("email-link").href = "mailto:keval@kapdee.uk";
+                }
+            </script>
             <div><a class="social" href="https://github.com/thechubbypanda"><i class="fab fa-github"></i></a></div>
-            <div><a class="social" href="https://www.linkedin.com/in/keval-kapdee/"><i class="fab fa-linkedin"></i></a></div>
-            <div><a class="social" href="https://stackoverflow.com/users/4896472/thechubbypanda"><i class="fab fa-stack-overflow"></i></a></div>
+            <div><a class="social" href="https://www.linkedin.com/in/keval-kapdee/"><i class="fab fa-linkedin"></i></a>
+            </div>
+            <div><a class="social" href="https://stackoverflow.com/users/4896472/thechubbypanda"><i
+                    class="fab fa-stack-overflow"></i></a></div>
         </div>
     </div>
 </header>
