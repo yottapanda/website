@@ -1,71 +1,73 @@
 <script>
 	import Header from '../lib/components/Header.svelte';
-
-	function display() {
-
-	}
+	import 'lazysizes';
 </script>
 
 <svelte:head>
 	<title>Keval Kapdee</title>
 </svelte:head>
 
-<div class="background-low">
-	<div class="background-high">
-		<div class="image_cover">
-			<div class="interface">
-				<div class="header">
-					<Header />
-				</div>
-				<div class="content">
-					<div class="spacer" />
-					<slot />
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="background-container">
+	<img
+		class="background lazyload blur"
+		alt="background"
+		data-sizes="auto"
+		src="background-low.jpg"
+		data-srcset="background-low.jpg 1008w,
+    background-med.jpg 2016w,
+    background-high.jpg 4032w"
+	/>
+	<div class="gradient" />
+	<div class="interface" />
+</div>
+<div class="header">
+	<Header />
+</div>
+<div class="content">
+	<slot />
 </div>
 
 <style>
-	.background-low,
-	.background-high,
-	.interface,
-	.image_cover {
+	.background-container {
 		position: relative;
-		background-repeat: no-repeat;
-		background-size: cover;
-		background-position: center center;
 		height: 100vh;
+		width: 100%;
 	}
 
-	.background-low {
-		background-image: url('background-low.jpg');
+	.background,
+	.gradient,
+	.interface {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 
-	.background-high {
-		background-image: url('background-high.jpg');
-		visibility: none;
+	.blur.lazyload {
+		filter: blur(3px);
+	}
+
+	.blur {
+		filter: blur(0);
+		transition: filter 500ms;
+	}
+
+	.gradient {
+		background: linear-gradient(#2a2a2a2f, 16%, #2a2a2aea);
 	}
 
 	.interface {
+		object-fit: unset;
 		background-image: url('interface.svg');
 		background-size: 100% auto;
+		background-repeat: no-repeat;
 		background-position: center bottom;
-	}
-
-	.image_cover {
-		background: linear-gradient(#2a2a2a2f, 16%, #2a2a2aea);
-		height: 100vh;
 	}
 
 	.content {
 		margin: auto;
 		padding: 1rem;
 		max-width: 900px;
-	}
-
-	.spacer {
-		height: 100vh;
 	}
 
 	.header {
