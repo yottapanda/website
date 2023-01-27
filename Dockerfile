@@ -1,15 +1,27 @@
 FROM node:alpine
 
-# Create app directory
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-RUN npm ci --omit dev
+WORKDIR /app
 
 COPY . .
 
-ENV PRODUCTION=true
+RUN npm ci
 
-EXPOSE 80
-CMD [ "node", "server.js" ]
+RUN npm audit fix
+    
+RUN npm run build
+
+
+FROM node:alpine
+
+WORKDIR /app
+
+COPY --from=0 /app/package*.json ./
+
+RUN npm ci --production --ignore-scripts
+
+RUN npm audit fix
+
+COPY --from=0 /app/build ./
+
+EXPOSE 3000
+CMD ["node", "./index.js"]
