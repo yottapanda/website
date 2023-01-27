@@ -1,7 +1,13 @@
 <script>
+	import { onMount } from 'svelte/internal';
 	import SocialLink from '../components/SocialLink.svelte';
 
 	let panda_mode = true;
+	onMount(async () => {
+		if (window.location.href.includes('keval.kapdee.uk')) {
+			panda_mode = false;
+		}
+	});
 </script>
 
 <div class="title">
@@ -9,11 +15,6 @@
 	<h4>thechubbypanda</h4>
 </div>
 <div class="socials">
-	<script>
-		if (window.location.href.includes('keval.kapdee.uk')) {
-			panda_mode = false;
-		}
-	</script>
 	<SocialLink
 		title={'Email'}
 		href={panda_mode ? 'mailto:keval@thechubbypanda.net' : 'mailto:keval@kapdee.uk'}
