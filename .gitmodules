@@ -1,3 +1,7 @@
-[submodule "static/profile"]
-	path = static/profile
-	url = ../profile.git
+[submodule "assets/profile"]
+	path = assets/profile
+	url = git@kapdee.uk:keval/profile.git
+[submodule "themes/congo"]
+	path = themes/congo
+	url = https://github.com/jpanther/congo.git
+	branch = stable

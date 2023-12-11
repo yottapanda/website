@@ -1,17 +1,25 @@
-.vscode
-.idea
+# Created by https://www.toptal.com/developers/gitignore/api/hugo
+# Edit at https://www.toptal.com/developers/gitignore?templates=hugo
 
-node_modules
+### Hugo ###
+# Generated files by hugo
+/public/
+/resources/_gen/
+/assets/jsconfig.json
+hugo_stats.json
 
-.git
-.gitattributes
+# Executable may be added to repository
+hugo.exe
+hugo.darwin
+hugo.linux
 
-.eslintignore
-.eslintrc.cjs
+# Temporary lock file while building
+/.hugo_build.lock
 
-.prettierrc
-.pretieriignore
-
-README.md
+# End of https://www.toptal.com/developers/gitignore/api/hugo
 
 Dockerfile
+.dockerignore
+.gitignore
+.gitmodules
+.gitattributes
