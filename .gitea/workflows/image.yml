@@ -9,7 +9,7 @@ env:
 
 jobs:
   image:
-    runs-on: ubuntu-latest
+    runs-on: default
     permissions:
       contents: read
       packages: write
