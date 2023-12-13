@@ -1,6 +1,6 @@
 [submodule "assets/profile"]
 	path = assets/profile
-	url = git@kapdee.uk:keval/profile.git
+	url = ../profile.git
 [submodule "themes/congo"]
 	path = themes/congo
 	url = https://github.com/jpanther/congo.git
