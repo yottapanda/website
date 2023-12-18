@@ -1,0 +1,14 @@
+clone:
+  clone:
+    image: woodpeckerci/plugin-git
+    settings:
+      recursive: true
+steps:
+  publish:
+    image: plugins/docker
+    settings:
+      registry: git.kapdee.uk
+      repo: git.kapdee.uk/${CI_REPO}
+      purge: false
+    when:
+      - branch: main
