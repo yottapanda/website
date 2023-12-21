@@ -2,7 +2,7 @@ steps:
   test:
     image: busybox
     commands:
-      - env
+      - sleep 1000
   publish:
     image: plugins/kaniko
     settings:
