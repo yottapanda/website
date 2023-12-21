@@ -1,8 +1,9 @@
 steps:
   test:
-    image: busybox
+    image: woodpeckerci/plugin-git
     commands:
-      - sleep 1000
+      - git submodule foreach git lfs pull
+      - git submodule foreach git lfs checkout
   publish:
     image: plugins/kaniko
     settings:
