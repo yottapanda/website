@@ -1,14 +1,9 @@
-# clone:
-#   git:
-#     image: woodpeckerci/plugin-git:latest
-#     settings:
-#       recursive: true
 steps:
   publish:
-    image: plugins/docker
+    image: woodpeckerci/plugin-docker-buildx
     settings:
       registry: git.kapdee.uk
       repo: git.kapdee.uk/${CI_REPO}
-      purge: false
+      auto_tag: true
     when:
       - branch: main
