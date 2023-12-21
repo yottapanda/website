@@ -1,4 +1,8 @@
 steps:
+  test:
+    image: busybox
+    commands:
+      - env
   publish:
     image: plugins/kaniko
     settings:
@@ -6,5 +10,7 @@ steps:
       repo: git.kapdee.uk/${CI_REPO}
       tags: latest
       dockerfile: dockerfile
+      username: $CI_REPO_OWNER
+      password: $PACKAGES_TOKEN
     when:
       - branch: main
