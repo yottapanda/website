@@ -1,9 +1,10 @@
 steps:
   publish:
-    image: woodpeckerci/plugin-docker-buildx
+    image: plugins/kaniko
     settings:
       registry: git.kapdee.uk
       repo: git.kapdee.uk/${CI_REPO}
-      auto_tag: true
+      tags: latest
+      dockerfile: dockerfile
     when:
       - branch: main
