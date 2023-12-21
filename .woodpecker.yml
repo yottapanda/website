@@ -11,6 +11,7 @@ steps:
       tags: latest
       dockerfile: dockerfile
       username: $CI_REPO_OWNER
-      password: $PACKAGES_TOKEN
+      password:
+        from_secret: packages_token
     when:
       - branch: main
