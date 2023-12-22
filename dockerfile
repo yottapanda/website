@@ -7,5 +7,5 @@ RUN hugo
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 COPY --from=build /build/public .
-COPY target/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY target/etc/nginx/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80/tcp
