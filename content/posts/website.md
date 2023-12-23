@@ -4,8 +4,10 @@ date: 2023-12-22
 draft: false
 description: "The evolution of this website and how it's built"
 summary: "The evolution of this website and how it's built"
-tags: ["website", "docker", "nginx", "ci/cd"]
-keywords: ["website", "docker", "nginx", "ci/cd"]
+tags: ["website", "docker", "nginx", "hugo"]
+keywords: ["website", "docker", "nginx", "hugo"]
+categories:
+    - Apps
 ---
 ## Introduction
 
