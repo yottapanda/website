@@ -15,7 +15,7 @@ I've had a website for a few years now. The first iteration I made was a simple,
 
 Recently I decided it was time to actually get some work done, make this blog, revamp the site and build my "personal brand" or whatever you want to call it. This post details just the start of the journey to make this website a fountain of knowledge and something to be proud of.
 
-## Descisions, Descisions
+## Decisions, Decisions
 
 As it turns out, there's a lot of ways to make a website nowadays (I'm not that old I promise). For any interactivity, you probably want to go for one of the major frameworks like React or if you like more niche solutions, Svelte(Kit) might be a good bet. Thankfully for this re-imagining of my website, all I need is a blog and a few links; A static site generator would do nicely, please and thank you.
 
@@ -30,7 +30,7 @@ There's a few SSGs running the blogging side of the internet at the moment:
 - MkDocs
 - a lot more
 
-Each of the big players has a focus in which they excel, for example Next.js is great at combining the features of an SSG with a full featured framework, React in this case. Wheras something like Jekyll is designed more for static blogs.
+Each of the big players has a focus in which they excel, for example Next.js is great at combining the features of an SSG with a full featured framework, React in this case. Whereas something like Jekyll is designed more for static blogs.
 
 Hugo caught my eye with it's build process and structure. It makes it easy to setup and then focus on the content with simple templating and taxonomies (e.g. tags and categories). So that's what I ended up with!
 
@@ -42,9 +42,9 @@ Having a look through [some themes](https://themes.gohugo.io/), I decided to fir
 - Looked good
 - Had a lot of stars on GitHub
 
-Unfortunately this turned out to be a bit of a mistake; The installation, configration and usage process of PaperMod... Could use some work. I found that the documentation wasn't quite up to scratch and I ended up trawling through examples from other people's blogs to find and change what I needed to. 
+Unfortunately this turned out to be a bit of a mistake; The installation, configuration and usage process of PaperMod... Could use some work. I found that the documentation wasn't quite up to scratch and I ended up trawling through examples from other people's blogs to find and change what I needed to. 
 
-At some point in this struggle I decided to give up and try a different theme which is when I came accross [Congo](https://jpanther.github.io/congo/). The docs are great, the examples are thorough and the configuration was easy. It even comes with a decent set of color schemes out of the box.
+At some point in this struggle I decided to give up and try a different theme which is when I came across [Congo](https://jpanther.github.io/congo/). The docs are great, the examples are thorough and the configuration was easy. It even comes with a decent set of color schemes out of the box.
 
 ## Building
 
@@ -64,7 +64,7 @@ FROM nginx:alpine
 COPY --from=build /build/public /usr/share/nginx/html/
 ```
 
-The `klakegg/hugo` build image was one I found after searching around online for something popular, I failed to realise it hadn't been updated in a while. While the `hugo` command worked locally (I use Arch btw), this docker build was not happy:
+The `klakegg/hugo` build image was one I found after searching around online for something popular, I failed to realize it hadn't been updated in a while. While the `hugo` command worked locally (I use Arch btw), this docker build was not happy:
 
 ```log
 ERROR 2023/12/22 14:27:49 render of "taxonomy" failed: "/build/themes/congo/layouts/_default/baseof.html:5:12": execute of template failed: template: _default/taxonomy.html:5:12: executing "_default/taxonomy.html" at <site>: can't evaluate field LanguageCode in type *langs.Language
@@ -75,7 +75,7 @@ Error: Error building site: failed to render pages: render of "home" failed: "/b
 
 What on earth does all that mean!?
 
-Thankfully we don't have to care too much as we have a scenario where it's building just fine, local. ArchLinux usually has particularly up-to-date packages and that holds true for the hugo package. It turns out that the hugo version built by klakegg a few months ago is already so outdated that the above errors are occuring.
+Thankfully we don't have to care too much as we have a scenario where it's building just fine, local. ArchLinux usually has particularly up-to-date packages and that holds true for the hugo package. It turns out that the hugo version built by klakegg a few months ago is already so outdated that the above errors are occurring.
 
 So what's the solution? Build the site on Arch, of course!
 
@@ -94,9 +94,9 @@ Now, while this works, this has it's downsides:
 
 #### 1. Downloading the hugo package every build isn't exactly quick, nor efficient.
 
-It would be much better to pre-build the build image and store it separately to use here. This means we only have to fetch the hugo package once in a while rather than every build. The problem with this is that it's another repository to manage, and monitor. For something this simple, it's probably just not worth the hassle. Especially with layer caching, the impact isn't really noticable for subsequent builds.
+It would be much better to pre-build the build image and store it separately to use here. This means we only have to fetch the hugo package once in a while rather than every build. The problem with this is that it's another repository to manage, and monitor. For something this simple, it's probably just not worth the hassle. Especially with layer caching, the impact isn't really noticeable for subsequent builds.
 
-#### 2. Archlinux is rolling release
+#### 2. ArchLinux is rolling release
 
 This means that the hugo package can be updated whenever. This might introduce breaking changes which could cause the site to start failing to build with no warning. Ideally we'd want to pin to a specific version of Hugo, likely running it from source with Go at some commit ref or tag.
 
