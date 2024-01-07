@@ -3,7 +3,7 @@ title: Switching ISP
 date: 2023-12-27
 draft: true
 description: &description Choosing a new ISP and getting around CGNAT for self-hosting.
-tags:
+tags: &tags 
   - docker
   - ipv6
   - networking
