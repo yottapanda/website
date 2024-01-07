@@ -2,18 +2,14 @@
 title: Switching ISP
 date: 2023-12-27
 draft: true
-description: Choosing a new ISP, understanding CGNAT and finding ways around it for self-hosting.
-summary: Setting up IPv6 in preparation for CGNAT
+description: &description Choosing a new ISP and getting around CGNAT for self-hosting.
 tags:
   - docker
   - ipv6
   - networking
-keywords:
-  - docker
-  - networking
-  - ipv6
-categories:
-  - IPv6
+  - cgnat
+summary: *description
+keywords: *tags
 ---
 ## Finding a New ISP
 

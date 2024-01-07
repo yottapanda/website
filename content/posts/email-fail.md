@@ -2,11 +2,16 @@
 title: "Email Fail"
 date: 2023-11-29
 draft: false
-description: "A mailserver incident post-mortem"
-summary: "A mailserver incident post-mortem"
-tags: ["email", "postfix", "docker", "incident", "firewall", "trust"]
-keywords: ["email", "postfix", "docker", "incident", "firewall", "trust"]
-categories: ["Incidents"]
+description: &description "A mailserver incident post-mortem"
+tags: &tags 
+  - email
+  - postfix
+  - docker
+  - incident
+  - firewall
+  - trust
+keywords: *tags
+summary: *description
 ---
 So I recently managed to make my Self-Hosted mailserver an **Open Relay**. This is bad.
 
