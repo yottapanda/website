@@ -1,7 +1,7 @@
 ---
 title: Cloud Router
-date: 2023-12-27
-draft: true
+date: 2024-01-13
+draft: false
 description: &description Getting around CGNAT for self-hosting with a Cloud Router.
 tags: &tags 
   - docker
@@ -28,7 +28,7 @@ Let's aim for that "Gigabit internet" target and see what we can find (ignoring 
 | Sky | 900/100 | £58 |
 | Community Fibre | 920/920 | £25 |
 
-"Do _you_ see the odd one out?", said Dora the Explorer.
+"Do _you_ see the odd one out?" - Dora the Explorer.
 
 Clearly Community Fibre woke up and chose violence. Not only do they have the second highest average down speed, they also boast a **symmetric upload speed**. All for half the price of the other offerings.
 
@@ -106,7 +106,7 @@ If instead of putting the wireguard endpoint on our server, we could put it on o
 
 Another nicety of Linode is the easy setup of Reverse DNS (PTR) records for our v4 IP. They have this functionality built into their management console, unlike Oracle. This is important if you host an email server like I do.
 
-### Choice
+### Choose Your Fighter
 
 We'll go with Oracle for now since:
 - It's free.
