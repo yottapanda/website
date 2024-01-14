@@ -159,6 +159,7 @@ Reserve a public IP from Oracle
 #### Instance
 
 1. Pick Ubuntu as your operating system (if you want to use an ARM instance, pick the aarch64 image).
+
 2. Change the shape to the specs you want, the minimums for any architecture are fine. I'll pick an ARM based instance with 2 vCPUs and 4 GB of RAM.
 
 This is what the Image and Shape section should look like if you're following this article to the letter:
@@ -176,22 +177,22 @@ This is what the Image and Shape section should look like if you're following th
 
 ```bash
 sudo apt install && sudo apt upgrade -y # ignore the service restarts for now
-sudo apt install -y wireguard # ignore again
+sudo apt install -y wireguard # ignore the service restarts for now
+sudo cp /etc/iptables/rules.v4 /etc/iptables/rules.v4.orig # take a copy of the original iptables rules just in case
+sed "/icmp-host-prohibited/d" /etc/iptables/rules.v4 | sudo tee /etc/iptables/rules.v4 # Remove the Oracle REJECT rules from INPUT and FORWARD
+sudo iptables-restore < /etc/iptables/rules.v4 # load the updated iptables rules
 sudo reboot
 ```
 
 8. Once the machine has rebooted, reconnect and run the following commands: 
 
 ```bash
-sudo cp /etc/iptables/rules.v4 /etc/iptables/rules.v4.orig # take a copy of the original iptables rules just in case
-sed "s/--dport 22/--dport 2222/" /etc/iptables/rules.v4 | sudo tee /etc/iptables/rules.v4 # Change the allowed SSH port from 22 to 2222
 sed "s/#Port 22/Port 2222/" /etc/ssh/sshd_config | sudo tee /etc/ssh/sshd_config # Change the port that sshd listens on to 2222
 ```
 
-**During and after the next commands do NOT disconnect from the session until you have tested your ability to ssh back in from a new shell.**
+**From now until the next step do NOT disconnect from the session until you have tested your ability to ssh back in from a NEW shell.** If you can't SSH into your cloud router after this, terminate it and go back to step 1.
 
 ```bash
-sudo iptables-restore < /etc/iptables/rules.v4 # load the updated iptables rules
 sudo systemctl reload sshd # reload the sshd config (now listens on 2222)
 ```
 
