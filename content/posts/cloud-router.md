@@ -220,6 +220,9 @@ Address = 10.0.17.1/30 # Any CIDR that doesn't overlap with the VCN's CIDR or an
 ListenPort = 51820
 PrivateKey = # contents of server.priv goes here
 
+# Allow the router to forward packets
+PreUp = sysctl net.ipv4.ip_forward=1
+
 # Immediately accept connections on 2222 so we can still SSH into the cloud router
 PreUp = iptables -t nat -A PREROUTING -i ens3 -p tcp --dport 2222 -j ACCEPT
 PostDown = iptables -t nat -D PREROUTING -i ens3 -p tcp --dport 2222 -j ACCEPT
