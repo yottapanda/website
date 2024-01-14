@@ -237,7 +237,7 @@ PublicKey = # contents of client.pub goes here
 AllowedIPs = 10.0.17.2/32
 ```
 
-The interface name `ens3` appears to be standard accross Oracle Cloud instances but you can check by doing an `ip a` and changing it if needed.
+You'll need to replace the `ens3` interface name; you can check yours by doing an `ip link show` and looking for the first one beginning with "e". It may look something like `enp0s12`.
 
 11. Start the wireguard server:
 
