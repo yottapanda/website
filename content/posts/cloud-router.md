@@ -7,6 +7,8 @@ tags: &tags
   - docker
   - networking
   - cgnat
+  - wireguard
+  - cloud
 summary: *description
 keywords: *tags
 ---
