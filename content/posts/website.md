@@ -167,4 +167,4 @@ By running the following command, we get our website running locally on `localho
 docker build -t my-blog . && docker run --rm -p 80:80 my-blog
 ```
 
-Now you can [publish that image](woodpecker.md) and [deploy it](docker-compose.md) anywhere you want, which I do in the linked posts.
+Now you can [publish that image]() and [deploy it]() anywhere you want, which I do in the linked posts (to be written).
