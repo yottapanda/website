@@ -22,7 +22,7 @@ Self hosting somehow survives these speeds just fine for the websites and such t
 
 Let's aim for that "Gigabit internet" target and see what we can find (ignoring contract length and setup fees):
 
-| ISP | Up/Down Mb/s | Cost/Month |
+| ISP | Down/Up Mb/s | Cost/Month |
 |---|---|---|
 | Virgin Media | 1130/104 | £45 |
 | BT | 900/110 | £43 |
