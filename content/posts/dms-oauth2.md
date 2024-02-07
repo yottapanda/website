@@ -27,22 +27,24 @@ Anyway, self-hosted email simply never caught up with big tech email in terms of
 
 Now this is not a big deal, passwords are secure when done right and they work with everything under the sun. However, when my dad inevitably forgets his password, I have to now change it for him in 2 places, not just one. Still not a big deal you say? I have OCD I don't care, I have to fix it.
 
-But wait! Doesn't Docker Mailserver (DMS) have LDAP support?
+## But What About LDAP?
 
-Well yes, my dear reader, it does... While LDAP would do the job, it's something that just doesn't fit well into a more modern stack. 
+While LDAP would do the job, it's 
 
-There's 2 ways of having both LDAP and OAuth2:
+There's 2 ways of setting up LDAP and OAuth2 together:
 
 - Use LDAP as the source of truth and the main authentication provider. Tack on an OAuth2 frontend and pray.
 - Use an OAuth2 provider as the source of truth, tacking on an LDAP adapter of some sort.
 
-Authentik can work in either scenario but not well (not the fault of Authentik's creator). OAuth2.0 is simply a much more lightweight specification, lacking things like user queries (foreshadowing) and 
+Authentik can work in either scenario but not well (not the fault of Authentik's creator). OAuth2 is more of an authorisation provider rather than an authentication provider. Yeah, I barely understand the difference myself... ChatGPT to the rescue!
 
-## The Solution
+> Authentication in LDAP involves verifying the identity of a user, typically through a username and password, ensuring they are who they claim to be. Authorization in OAuth2, on the other hand, deals with granting access to specific resources or functionalities based on the permissions associated with a user's OAuth token, allowing them to perform certain actions within a system or application.
 
 "I'll just implement it for Docker Mailserver myself!" I said. "How hard can it be?"
 
 Famous last words...
+
+## The Solution
 
 If you want to skip the shenanigans, here's the [GitHub PR](https://github.com/docker-mailserver/docker-mailserver/pull/3480).
 
