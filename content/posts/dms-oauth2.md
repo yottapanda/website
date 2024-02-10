@@ -31,10 +31,9 @@ Famous last words...
 
 ### But What About LDAP?
 
-Docker Mailserver (DMS) already has solid support for LDAP but while LDAP would do the job, I don't really want 2 different auth systems to deal with even if only one acts as a source of truth. Since OAuth2 is the newer protocol, I'm going to stick with that. A lighter stack is a happier stack in my opinion.
+Docker Mailserver (DMS) already has solid support for LDAP but while LDAP would do the job, I don't really want 2 different auth systems to deal with even if only one acts as a source of truth. Since OAuth2 is the newer protocol, I'm going to stick with that.
 
 Honestly, I'm probably wrong in hindsight, but when I decided to make the pull request, I didn't want to bother learning and using LDAP.
-
 ### Dovecot
 
 DMS uses a program called Dovecot as it's Mail Deliver Agent (MDA). It's responsible for receiving email from Mail Transfer Agents (MTAs) like Postfix (that DMS also uses) and putting it in the relevant mailboxes for the users of the server and then serving those mailboxes to users via the IMAP or POP3 protocols.
@@ -63,11 +62,22 @@ Dovecot ->> Roundcube: Respond with mailbox
 Roundcube ->> User: Display mailbox
 {{< /mermaid >}}
 
-This is a standard OAuth flow where Roundcube acts as the 
+This is a standard OAuth flow, and worked quite well apart from 2 rather annoying issues:
+
+1. There is no way to use an email client that doesn't support generic OAuth.
+
+This is because I had disabled all other authentication mechanisms and so a password is simply no longer accepted.
+
+2. Emails sent to a valid user won't arrive unless that user has previously logged into the system.
+
+This is because Dovecot/Postfix, I don't actually know which, has no way of querying users from Authentik via OAuth2 and so only knows of your existence once you log in for the first time. This is obviously a nuisance to put it mildly and something the DMS maintainers weren't quite fond of.
 
 ### Trials and Deprecations
 
-I tried OAuth**1.0**'s _Password Grant_ feature. This allows an authentication client to take a username and password from the user and pass them along to the authentication server to verify. Unfortunately this got deprecated quite quickly as, as you can imagine, sneaky clients can just steal your credentials and impersonate you.
+In an attempt to solve problem 1, I tried OAuth**1.0**'s _Password Grant_ feature. This allows an authentication client to take a username and password from the user and pass them along to the authentication server to verify. (Un)fortunately this got deprecated quite quickly as, sneaky clients can just steal your credentials and impersonate you.
 
-With that idea out the window, I trawled docs and other sources in search of an alternative way to let dovecot utilize 
+### Mildly Maiming 2 Birds With 1 Sad Excuse for a Pebble
 
+So problem 2 boils down to the Dovecot userdb (told you it would come back to haunt us). OAuth simply provides no way of querying users which is something we need.
+
+Now there is a way to solve this problem but it's not pretty. It involves the API of whatever OAuth provider you're using, more specifically, using _it_ to query the users instead of the relying on the OAuth2 protocol to have all the answers.
