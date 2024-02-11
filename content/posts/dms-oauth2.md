@@ -1,6 +1,6 @@
 ---
 title: OAuth2 for Docker Mailserver
-date: 2024-01-28
+date: 2024-02-11
 draft: true
 description: My first major open source contribution to docker-mailserver involving OAuth2.
 tags:
