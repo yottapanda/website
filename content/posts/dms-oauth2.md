@@ -70,7 +70,7 @@ This is because I had disabled all other authentication mechanisms and so a pass
 
 2. Emails sent to a valid user won't arrive unless that user has previously logged into the system.
 
-This is because Dovecot/Postfix, I don't actually know which, has no way of querying users from Authentik via OAuth2 and so only knows of your existence once you log in for the first time. This is obviously a nuisance to put it mildly and something the DMS maintainers weren't quite fond of.
+This is because Dovecot/Postfix, I don't actually know which, has no way of querying users from Authentik via OAuth2 and so only knows of your existence once you log in for the first time. This is a nuisance to put it mildly.
 
 ### Trials and Deprecations
 
@@ -78,6 +78,20 @@ In an attempt to solve problem 1, I tried OAuth**1.0**'s _Password Grant_ featur
 
 ### Mildly Maiming 2 Birds With 1 Sad Excuse for a Pebble
 
-So problem 2 boils down to the Dovecot userdb (told you it would come back to haunt us). OAuth simply provides no way of querying users which is something we need.
+Problem number 2 boils down to the Dovecot userdb (told you it would come back to haunt us). OAuth simply provides no way of querying users which is something we need.
 
-Now there is a way to solve this problem but it's not pretty. It involves the API of whatever OAuth provider you're using, more specifically, using _it_ to query the users instead of the relying on the OAuth2 protocol to have all the answers.
+Now there is a way to solve this problem but it's not pretty. It involves the API of whatever OAuth provider you're using, more specifically, using _it_ to query the users instead of the relying on the OAuth2 protocol to have all the answers (which it doesn't). 
+
+The conclusion the maintainers and I came to was to limit the scope of the PR; Instead of a full blown Auth provider, add OAuth2 support on top of either of the file provider or LDAP provider. So you can either use a DMS specific password to log in or log in via something like Roundcube using your OAuth credentials.
+
+Instead of replacing the Dovecot userdb and passed, we simply add another passdb and Dovecot automatically tries both.
+
+I also added an integration test by mocking an OAuth provider using python to ensure everything worked as expected.
+
+After a lot of documentation updates and conversations regarding configuration, the changes were eventually merged in. 
+
+## Future Plans
+
+I'd still like to implement full OAuth2 support by adding userdb capabilities via API calls. Unfortunately it doesn't make much sense until more clients support generic OAuth.
+
+Perhaps if I were to make an RFC to add user querying to OAuth... Who am I kidding, the chances of that happening are slim to none 😂
