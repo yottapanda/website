@@ -2,8 +2,8 @@
 title: OAuth2 for Docker Mailserver
 date: 2024-02-11
 draft: false
-description: My journey implementing OAuth2 for Docker Mailserver.
-tags:
+description: &description My journey implementing OAuth2 for Docker Mailserver.
+tags: &tags
   - email
   - oauth2
   - opensource
