@@ -18,8 +18,12 @@ hugo.linux
 
 # End of https://www.toptal.com/developers/gitignore/api/hugo
 
-Dockerfile
-.dockerignore
-.gitignore
-.gitmodules
-.gitattributes
+/Dockerfile
+/.dockerignore
+/.gitignore
+/.gitmodules
+/.gitattributes
+/.obsidian/
+/.git/
+/themes/congo/node_modules/
+/themes/congo/exampleSite
