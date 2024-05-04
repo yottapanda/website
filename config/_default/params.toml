@@ -71,9 +71,9 @@ fingerprintAlgorithm = "sha256"
   # domain = "llama.yoursite.com"
 
 [plausibleAnalytics]
-  # domain = "blog.yoursite.com"
+  domain = "keval.kapdee.uk"
+  script = "https://plausible.kapdee.uk/js/script.js"
   # event = ""
-  # script = ""
 
 [verification]
   # google = ""
