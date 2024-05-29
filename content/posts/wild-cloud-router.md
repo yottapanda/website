@@ -1,7 +1,7 @@
 ---
 title: Cloud Router in the Wild
 date: 2024-05-30
-draft: true
+draft: false
 description: &description Implementing a cloud router for a client
 tags: &tags 
   - networking
