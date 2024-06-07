@@ -2,7 +2,7 @@
 title: "Email Fail"
 date: 2023-11-29
 draft: false
-description: &description "A mailserver incident post-mortem"
+description: &description A mailserver incident post-mortem.
 tags: &tags 
   - email
   - postfix

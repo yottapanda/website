@@ -2,7 +2,7 @@
 title: "This Website"
 date: 2023-12-22
 draft: false
-description: &description "The evolution of this website and how it's built"
+description: &description The evolution of this website and how it's built.
 tags: &tags ["website", "docker", "nginx", "hugo"]
 summary: *description
 keywords: *tags
