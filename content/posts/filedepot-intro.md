@@ -1,6 +1,6 @@
 ---
 title: Introducing FileDepot
-date: 2024-06-06
+date: 2024-06-14
 draft: false
 description: &description Introducing my side project, a new file sharing and backup system.
 tags: &tags 
