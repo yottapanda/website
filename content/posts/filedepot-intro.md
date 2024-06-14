@@ -1,7 +1,7 @@
 ---
 title: Introducing FileDepot
 date: 2024-06-06
-draft: true
+draft: false
 description: &description Introducing my side project, a new file sharing and backup system.
 tags: &tags 
   - networking
@@ -50,12 +50,34 @@ Ideally, I want the app to be compatible with any WebDAV server, not just the Fi
 
 ### Other Clients
 
-I know I've said it a couple of times but for those who are skimming this; Thanks to Jetpack Compose Multiplatform (JCP) I'll be able to make clients for Android, iOS, Desktop and Web.
+I know I've said it a couple of times but for those who are skimming this; Thanks to Jetpack Compose Multiplatform (JCM) I'll be able to make clients for Android, iOS, Desktop and Web.
 
-The alternatives to JCP this come down to Flutter or a separate codebase for each platform. I initially did start using Flutter but ran into a few issues, namely the lack of solid libraries for WebDAV or OIDC/OAuth2. Also, UI not being my strong suit, I opted for one codebase over multiple.
+The alternatives to JCM this come down to Flutter or a separate codebase for each platform. I initially did start using Flutter but ran into a few issues, namely the lack of solid libraries for WebDAV or OIDC/OAuth2. Also, UI not being my strong suit, I opted for one codebase over multiple.
 
 Now, I'm aware that the conception is that the JVM is particularly slow and bulky compared to compiled languages like Go, Rust, etc. I would have loved to build the entire stack in Golang but alas, the support/community is just not sufficient to build something "real".
 
-If you're yelling "React Native" at me right now, hear this: JavaScript was a mistake. Everything we've built on top of it is like trying to put makeup on a frog. Sure it helps, but you literally could not pay me to kiss it.
+If you're yelling "React Native" at me right now, hear this: JavaScript was a mistake. Everything we've built on top of it is like trying to put makeup on a frog. Sure it helps, but you still could not pay _me_ to kiss it.
 
+## File Where Now?
 
+> Hey, I can't find the code! I thought you said this was Open Source?
+
+For now, I've decided to keep this project closed source. At least until I've had the chance to get something that works and clean it up a bit. I can't have you lot gawking at my garbage prototype code!
+
+I intend to, at minimum, open source the server component of the project. The clients are a different matter and I'm still deciding on what I want to do with them. 
+
+I'd love to be able to make money out of this project:
+
+- One way would be to offer a managed solution where I run the server and store your data and I can do this while also making the server open source and freely available.
+- Another would be to make the whole app or portions of it paid. Hence, my hesitation to open source the app.
+- Advertising is something I'd rather steer clear of.
+
+If you have any experience finding a good monetization strategy for things like this, do get in touch! I am always happy to receive advice.
+
+**Regardless, monetization isn't important until I have a working solution**, so that's what I'm focusing on at the moment.
+
+## Following Progress
+
+This blog will be the best place to follow the progress of FileDepot for now. If enough people take an interest, I may create a mailing list or Discord Server for more regular updates.
+
+Until the next update/blog post, 🫡.
