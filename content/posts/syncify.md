@@ -13,7 +13,7 @@ keywords: *tags
 ---
 ## All I Want To Do Is Share My Songs
 
-I have a friend who's musical taste is a real mixed-bag. He's simultaneously stuck in the 2000s pop era and somehow also has an absolute blast listening to _my_ music. On numerous occasions he has asked me to share my playlist with him which but alas, I've had to remind him each time that it's impossible.
+I have a friend who's musical taste is a real mixed-bag. He's simultaneously stuck in the 2000s pop era and somehow also has an absolute blast listening to _my_ music. On numerous occasions he has asked me to share my playlist with him, but alas I've had to remind him each time that it's impossible.
 
 Are you trying to share your "Liked Songs" now? Don't worry, I'll explain what's going on.
 
