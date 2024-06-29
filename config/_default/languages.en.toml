@@ -9,13 +9,10 @@ title = "TheChubbyPanda"
 [params]
   dateFormat = "2006-01-02"
 
-[params.author]
-  name = "Keval Kapdee"
-
   # mainSections = ["section1", "section2"]
   # description = "My awesome website"
 
-[author]
+[params.author]
   name = "Keval Kapdee"
   image = "profile/icon.png"
   headline = "thechubbypanda"
