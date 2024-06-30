@@ -90,7 +90,7 @@ We'll need something to act as our Cloud Router so I've compiled a list of some 
 | Linode | 1.0 | 1.0 | 25 | 1000 | 1.0 | 5.00 | [Link](https://www.linode.com/pricing/#compute-shared)
 
 I see 3 potential solutions here in my personal order of preference:
-1. Oracle for having a ludicrous free tier including both ARM and x86 machines with 10 000TB of egress. 
+1. Oracle for having a ludicrous free tier including both ARM and x86 machines with 10TB of egress. 
 2. Linode for their apparent lack of immediately obvious problems and their extra features (which I'll explain soon).
 3. Azure for simply being the cheapest on the board. A potential worry here is hitting the 100GB free data transfer limit in one month. (Azure also gets no points for their calculator, it's _slow_).
 
@@ -126,7 +126,7 @@ Let's take an inventory of what we'll need:
 - A Wireguard "server" on the VPS since it's the only thing with a public IP.
 - A set of iptables rules to forward traffic correctly on the VPS.
 - A Wireguard "client" on our local server.
-- A set of iptables rules to route traffic back over the wireguard
+- A set of iptables rules to route traffic back over the Wireguard tunnel.
 
 ### VPS
 
@@ -165,7 +165,7 @@ Reserve a public IP from Oracle
 2. Change the shape to the specs you want, the minimums for any architecture are fine. I'll pick an ARM based instance with 2 vCPUs and 4 GB of RAM.
 
 This is what the Image and Shape section should look like if you're following this article to the letter:
-![Machine sizing](img/cloud-router-specs.png)
+![Machine sizing](/img/cloud-router-specs.png)
 
 3. Under "Primary VNIC information" ensure it's using all the relevant entities from the VCN that we just configured. The "auto assign public IPv4 address" box should be checked.
 
