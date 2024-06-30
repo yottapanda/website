@@ -178,24 +178,25 @@ This is what the Image and Shape section should look like if you're following th
 7. Then run the following commands on the cloud router:
 
 ```bash
-sudo apt install && sudo apt upgrade -y # ignore the service restarts for now
-sudo apt install -y wireguard # ignore the service restarts for now
-sudo cp /etc/iptables/rules.v4 /etc/iptables/rules.v4.orig # take a copy of the original iptables rules just in case
-sed "/icmp-host-prohibited/d" /etc/iptables/rules.v4 | sudo tee /etc/iptables/rules.v4 # Remove the Oracle REJECT rules from INPUT and FORWARD
-sudo iptables-restore < /etc/iptables/rules.v4 # load the updated iptables rules
-sudo reboot
+apt install && apt upgrade -y # ignore the service restarts for now
+apt install -y wireguard # ignore the service restarts for now
+cp /etc/iptables/rules.v4 /etc/iptables/rules.v4.orig # take a copy of the original iptables rules just in case
+sed -i "/icmp-host-prohibited/d" /etc/iptables/rules.v4 # Remove the Oracle REJECT rules from INPUT and FORWARD
+iptables-restore < /etc/iptables/rules.v4 # load the updated iptables rules
+reboot
 ```
 
 8. Once the machine has rebooted, reconnect and run the following commands: 
 
 ```bash
-sed "s/#Port 22/Port 2222/" /etc/ssh/sshd_config | sudo tee /etc/ssh/sshd_config # Change the port that sshd listens on to 2222
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.orig # take a copy of the original sshd_config just in case
+sed -i "s/#Port 22/Port 2222/" /etc/ssh/sshd_config # Change the port that sshd listens on to 2222
 ```
 
 **From now until the next step do NOT disconnect from the session until you have tested your ability to ssh back in from a NEW shell.** If you can't SSH into your cloud router after this, terminate it and go back to step 1.
 
 ```bash
-sudo systemctl reload sshd # reload the sshd config (now listens on 2222)
+systemctl reload sshd # reload the sshd config (now listens on 2222)
 ```
 
 Now in a **new terminal**, ssh into the machine using the new port:
@@ -244,9 +245,9 @@ You'll need to replace the `ens3` interface name; you can check yours by doing a
 11. Start the wireguard server:
 
 ```bash
-sudo chown root:root /etc/wireguard/wg0.conf
-sudo chmod go= /etc/wireguard/wg0.conf
-sudo systemctl enable --now wg-quick@wg0
+chown root:root /etc/wireguard/wg0.conf
+chmod go= /etc/wireguard/wg0.conf
+systemctl enable --now wg-quick@wg0
 ```
 
 Ensure everything worked nicely using:
@@ -301,9 +302,9 @@ PersistentKeepalive = 30
 4. And start it:
 
 ```bash
-sudo chown root:root /etc/wireguard/wg0.conf
-sudo chmod go= /etc/wireguard/wg0.conf
-sudo systemctl enable --now wg-quick@wg0
+chown root:root /etc/wireguard/wg0.conf
+chmod go= /etc/wireguard/wg0.conf
+systemctl enable --now wg-quick@wg0
 ```
 
 5. Again, check the status with:
@@ -350,7 +351,7 @@ Speaking of web servers, let's set one up:
 2. Install docker on your local server and run the following command to start a basic web server:
 
 ```bash
-sudo docker run --rm -it -p 80:80 nginx
+docker run --rm -it -p 80:80 nginx
 ```
 
 3. Using a browser, go to `http://<Cloud Router Public IP>` and you should see the default Nginx landing page.
