@@ -18,7 +18,7 @@ Internet speeds in the UK tend to be rather abysmal for their asking price.
 
 I'm currently buying an internet connection from Plusnet who are charging me ~£20/m for a 36Mb/s down, 10Mb/s up connection (with landline). They also charged me a small, one time setup fee (a few quid) for a static IPv4 address which I've been happily using for a while now. This is all provided over my copper phone line (very old).
 
-Self hosting somehow survives these speeds just fine for the websites and such that I run but I've been eyeing up a faster connection for some time now to improve my file transferring capabilities. Unfortunately there is a speed limit on copper wires of 80Mb/s down, 20Mb/s up and that's in a best case scenario. So my dreams of Gigabit internet are going to require a bit more effort.
+Self-hosting somehow survives these speeds just fine for the websites and such that I run, but I've been eyeing up a faster connection for some time now to improve my file transferring capabilities. Unfortunately there is a speed limit on copper wires of 80Mb/s down, 20Mb/s up and that's in the best case scenario. So my dreams of Gigabit internet are going to require a bit more effort.
 
 Let's aim for that "Gigabit internet" target and see what we can find (ignoring contract length and setup fees):
 
@@ -32,7 +32,7 @@ Let's aim for that "Gigabit internet" target and see what we can find (ignoring 
 
 "Do _you_ see the odd one out?" - Dora the Explorer.
 
-Clearly Community Fibre woke up and chose violence. Not only do they have the second highest average down speed, they also boast a **symmetric upload speed**. All for half the price of the other offerings.
+Clearly Community Fibre woke up and chose violence. Not only do they have the second-highest average down speed, they also boast a **symmetric upload speed**. All for half the price of the other offerings.
 
 "Yeah that's great but what's the catch?" is what you're probably asking right about now. I asked it too.
 
@@ -53,7 +53,7 @@ C(Your Router) <-- 192.168.0.0/24 --> D(Your Server)
 
 Rather convoluted if you ask me!
 
-Now the problem with this is that we don't have control over the ISP router that's performing CGNAT so we have no way of port forwarding. That means no self-hosting 😢.
+Now the problem with this is that we don't have control over the ISP router that's performing CGNAT, so we have no way of port forwarding. That means no self-hosting 😢.
 
 ## Act 2: A Challenger Approaches
 
@@ -74,11 +74,11 @@ A <-- 0.0.0.0/0 --> Q(Cloud Router)
 Q <-- 10.69.69.0/24 --> D
 {{< /mermaid >}}
 
-Physically, the wireguard tunnel (10.69.69.0/24) goes over our existing CGNAT connection but logically, the CGNAT connection is abstracted away and isn't something we need to worry about just yet.
+Physically, the Wireguard tunnel (10.69.69.0/24) goes over our existing CGNAT connection but logically, the CGNAT connection is abstracted away and isn't something we need to worry about just yet.
 
 ### Finding a VPS
 
-We'll need something to act as our Cloud Router so I've compiled a list of some various VPS options below. Each assumes that savings plans (or equivalent) have been applied up to 1 year in duration, excluding any upfront payments. I've also gone for the smallest VPS from each provider as we barely need any raw power.
+We'll need something to act as our Cloud Router, so I've compiled a list of some various VPS options below. Each assumes that savings plans (or equivalent) have been applied up to 1 year in duration, excluding any upfront payments. I've also gone for the smallest VPS from each provider as we barely need any raw power.
 
 | Cloud | vCPU | RAM (GiB) | Disk (GB) | Data Transfer (GB) | Network Speed (Gb/s)| Monthly Cost ($) | Cost Calculator Link (or equivalent) |
 |--|--|--|--|--|--|--|--|
@@ -94,17 +94,17 @@ I see 3 potential solutions here in my personal order of preference:
 2. Linode for their apparent lack of immediately obvious problems and their extra features (which I'll explain soon).
 3. Azure for simply being the cheapest on the board. A potential worry here is hitting the 100GB free data transfer limit in one month. (Azure also gets no points for their calculator, it's _slow_).
 
-AWS appears far too expensive for this use case. However it wasn't the compute, the transfer cost is what's stinging us. 
+AWS appears far too expensive for this use case. However, it wasn't the compute, the transfer cost is what's stinging us. 
 
 AWS loses in this battle because they don't offer some free transfer every month. Egress transfer costs are expensive across the board beyond free amounts so if you're looking to do multiple TB per month, Oracle is your choice.
 
-GCP doesn't make the cut due to their high vCPU price, perhaps they have _extremely_ fast CPUs but I've not dug into it so for now... we'll leave them be.
+GCP doesn't make the cut due to their high vCPU price, perhaps they have _extremely_ fast CPUs, but I've not dug into it so for now... we'll leave them be.
 
 #### Linode's "Extra Features"
 
 Since we're making a Cloud _Router_, wouldn't it be nice if we could do some IPv6 routing? Linode is the only provider (from what I can tell) that allows us to assign a prefix larger than a /64 to our VPS. This means we can have it run SLAAC with RA and assign downstream clients public static IPv6 addresses.
 
-If instead of putting the wireguard endpoint on our server, we could put it on our usual router and it would almost act as just another WAN connection!
+If instead of putting the Wireguard endpoint on our server, we could put it on our usual router, and it would almost act as just another WAN connection!
 
 Another nicety of Linode is the easy setup of Reverse DNS (PTR) records for our v4 IP. They have this functionality built into their management console, unlike Oracle. This is important if you host an email server like I do.
 
@@ -144,9 +144,9 @@ Once you've signed up for a free Oracle Cloud account, use the search in the man
 
 | Source | Protocol | Destination Port | Explanation |
 |--|--|--|--|
-|0.0.0.0/0|tcp|22|For SSH-ing into the cloud router before we reconfigure it|
-|0.0.0.0/0|tcp|2222|For SSH-ing into the cloud router once we've reconfigured it|
-|0.0.0.0/0|udp|51820|For Wireguard|
+|0.0.0.0/0|TCP|22|For SSH-ing into the cloud router before we reconfigure it|
+|0.0.0.0/0|TCP|2222|For SSH-ing into the cloud router once we've reconfigured it|
+|0.0.0.0/0|TCP|51820|For Wireguard|
 
 If you were particularly paranoid, you could lock down the Wireguard one to only allow Source IPs from your ISP's CGNAT CIDRs.
 
@@ -242,7 +242,7 @@ AllowedIPs = 10.0.17.2/32
 
 You'll need to replace the `ens3` interface name; you can check yours by doing an `ip link show` and looking for the first one beginning with "e". It may look something like `enp0s12`.
 
-11. Start the wireguard server:
+11. Start the Wireguard server:
 
 ```bash
 chown root:root /etc/wireguard/wg0.conf
@@ -264,7 +264,7 @@ Now we'll setup something very similar on our local server, it should be a bit s
 
 2. Install wireguard/wireguard-tools depending on your distribution.
 
-3. Create the client wireguard config `/etc/wireguard/wg0.conf`:
+3. Create the client Wireguard config `/etc/wireguard/wg0.conf`:
 
 ```conf
 [Interface]
@@ -329,16 +329,16 @@ ssh localServerUser@<Cloud Router Public IP>
 Let's go through what's happening when we execute this command:
 
 1. Packet from the initiator (in this case you) comes into the cloud router from the internet.
-2. The packet gets checked by the iptables rules in the nat table and it matches the second rule (`iptables -t nat -A PREROUTING -i ens3 -p tcp -j DNAT --to-destination 10.0.17.2`).
+2. The packet gets checked by the iptables rules in the NAT table, and it matches the second rule (`iptables -t nat -A PREROUTING -i ens3 -p tcp -j DNAT --to-destination 10.0.17.2`).
 3. That same rule changes the destination address to that of the local server (over the wireguard connection).
 4. The cloud router forwards the packet to the local server.
 5. The local server receives the packet and marks the connection before handling the packet.
 6. The local server generates a response on the connection and begins to send it back out.
 7. The local server marks the packet since the connection was already marked.
-8. The local server sends the response packet back over the wireguard connection to the cloud router.
+8. The local server sends the response packet back over the Wireguard connection to the cloud router.
 9. The cloud router receives the packet and forwards it out back over the internet to the initiator (you).
 
-In this case, the connection/packet marking isn't needed as the response packet's _from_ address is that of the wireguard interface so we just use that information to route it correctly.
+In this case, the connection/packet marking isn't needed as the response packet's _from_ address is that of the Wireguard interface, so we just use that information to route it correctly.
 
 The marking comes into play when you use (for example) docker to run the actual service... a web server or something.
 
