@@ -38,23 +38,48 @@ Firstly, I've set up a relatively simple Cloud Gateway, similar to what I descri
 {{< mermaid >}}
 graph LR
     Phone(My Phone)
-    Internet(Internet)
+    Internet[Internet]
     Gateway(Cloud Gateway)
     CGNAT(ISP's CGNAT Router)
-
-    subgraph House [My House]
-        Router(Mikrotik Home Router)
-        D(My Server)
-        E(Brother's Laptop)
+    subgraph House [House]
+        Router(Router)
+        Server(Server)
+        Laptop(Laptop)
     end
 
     Internet --- CGNAT
     CGNAT --- Router
     Internet --- Gateway
-    Phone -.- Router
+    Phone -.-> Gateway
     Phone --- Internet
-    Gateway -.- Router
-    Router --- D
-    Router --- E
-
+    Gateway -.- CGNAT
+    Gateway -.-> CGNAT
+    CGNAT -.- Router
+    CGNAT -.-> Router
+    Router --> Server
+    Router --- Laptop
 {{< /mermaid >}}
+
+So that's terrible... Oh well, I'll try my best to explain it.
+
+Firstly, the solid lines indicate normal network connections. The dotted lines indicate a VPN connection.
+
+As you can see, there's one VPN line between My Phone and the Cloud Gateway. That's the trusted VPN that terminates on the Router (which acts as a Wireguard "server"). This line(VPN) traverses the Cloud Gateway, and gets wrapped in another layer of Wireguard.
+
+This second layer of Wireguard (the other dotted line) is the Peer to Peer VPN that allows us to have another WAN. In this case, the Cloud Gateway Server acts as the Wireguard "server" and the Router as the "client". Because we are initiating the connection outward, we circumvent our inability to punch through the CGNAT router from the internet.
+
+From the perspective of the phone, it's initiating a connection directly with the Cloud Gateway('s IP). The Cloud Gateway just happens to be forwarding all its packets across another Wireguard connection to the Router. If you follow the arrows, you can see the path that the Phone's VPN packets take to reach a web server on the Server.
+
+At this point I can't tell if this is extremely complicated or if I've just been overcomplicating it for the past 2 weeks whilst I've been fighting it. It could be that I'm just very used to it now 🤷‍♂️.
+
+## Maybe I'm Crazy
+
+
+
+## Moral Of The Story
+
+All these shenanigans could have been easily avoided if the rest of the internet actually supported IPv6. My brother's friend's ISP simply doesn't have it. And Vodafone's Cellular Network doesn't support it either.
+
+While I was writing this post, I remembered that there's quite a few [transition mechanisms](https://en.wikipedia.org/wiki/IPv6_transition_mechanism) which allow cross-communication between IPv4 and IPv6 networks in different capacities. 
+
+If there exists a mechanism whereby I can have one VPS translate IPv4 packets to IPv6 packets and forward them on to my internal network, that might be the way to go. That way I may not need any crazy VPNs. The only problem left to solve would be the complete ambiguity as to whether or not the IPv6 space that my ISP provides me is actually static...
