@@ -70,9 +70,71 @@ This second layer of Wireguard (the other dotted line) is the Peer to Peer VPN t
 
 From the perspective of the phone, it's initiating a connection directly with the Cloud Gateway('s IP). The Cloud Gateway just happens to be forwarding all its packets across another Wireguard connection to the Router. If you follow the arrows, you can see the path that the Phone's VPN packets take to reach a web server on the Server.
 
-At this point I can't tell if this is extremely complicated or if I've just been overcomplicating it for the past 2 weeks whilst I've been fighting it. It could be that I'm just very used to it now 🤷‍♂️.
+At this point I can't tell if this is extremely complicated or if I've just been overcomplicating it for the past 2 weeks whilst I've been wrangling it together. It could be that I'm just very used to it now 🤷‍♂️.
 
-## Maybe I'm Crazy
+## Implementation
+
+Ignoring the question of my sanity, let's have a look at how I went about setting this up.
+
+There are 3 entities involved in this dance of firewalls and VPNs that we'll be interacting with:
+
+1. The Phone
+2. The Gateway
+3. The Router
+
+To simplify the above diagram: The phone communicates with the gateway which, unbeknownst to the phone, forwards everything to the router.
+
+{{< mermaid >}}
+graph LR
+    Phone(My Phone)
+    Gateway(Cloud Gateway)
+    subgraph House [House]
+        Router(Router)
+    end
+
+    Phone --> Gateway
+    Gateway --> Router
+{{< /mermaid >}}
+
+Between the Cloud Gateway and the Router, we'll setup a VPN connection called the **WAN VPN**; named so because it tunnels traffic from the open internet without discretion (depending on how you configure it).
+
+Between the Phone and the Router, we'll set up a VPN connection called the **Private VPN**. This is because it grants access to the internal network of the router.
+
+Let's go from least to most complex...
+
+### The Phone
+
+All we need to do for the phone is set it up as a Wireguard **client** on our Private VPN.
+
+It does not need to know anything about the WAN VPN since, as I said before, the whole forwarding process is transparent.
+
+We'll configure the Phone as follows:
+
+```
+[Interface]
+
+# Address of the client on the VPN
+Address = 192.168.17.69/24
+
+# Wireguard client
+PrivateKey = ...
+
+[Peer]
+
+# Point to the gateway IP and the port that our private VPN "server" will listen on
+Endpoint = <gateway ip>:<private vpn port on router>
+
+# Allow client to connect to VPN endpoint and internal network respectively
+AllowedUPs = 192.168.17.1/32, 192.168.16.0/24
+
+# (Optional) Maintain the connection so we can initiate connections out to the device from the internal network
+PersistentKeepalive = 25
+
+# Wireguard server
+PublicKey = ...
+```
+
+### The Gateway
 
 
 
