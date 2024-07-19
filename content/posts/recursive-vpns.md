@@ -29,7 +29,7 @@ I like [Tailscale](https://tailscale.com/) a lot. However, it limits the number 
 
 Everyone that should have access to the VPN is already set up on an IDP and unless I pay the big bucks ($6/user/month at time of writing), I can't connect them up. Plus it's not self-hosted, which goes against the whole ethos with which I build all this cool stuff.
 
-I like [Headscale](https://headscale.net/) even more, which is self-hosted, and would likely be a great option. The only reason I didn't opt for it is that hindsight is 20-20 😂. Plus I would still have wanted to host it locally which is basically the same as what I've ended up with anyway, just without some bells and whistles. I might swap to Headscale in the future, we'll see.
+I like [Headscale](https://headscale.net/) even more, which is self-hosted, and would likely be a great option. One reason I didn't opt for it is that hindsight is 20-20 😂. Plus I would still have wanted to host it locally which is basically the same as what I've ended up with anyway minus some bells and whistles. I might swap to Headscale in the future, we'll see.
 
 ## What Did You Actually Build?
 
@@ -155,6 +155,10 @@ PreUp = sysctl net.ipv4.ip_forward=1
 PreUp = iptables -t nat -A PREROUTING -i enp0s6 -p tcp --dport 2222 -j ACCEPT
 PostDown = iptables -t nat -D PREROUTING -i enp0s6 -p tcp --dport 2222 -j ACCEPT
 
+# Immediately accept UDP connections on 51820 (the wireguard listen port above)
+PreUp = iptables -t nat -A PREROUTING -i enp0s6 -p udp --dport 51820 -j ACCEPT
+PostDown = iptables -t nat -D PREROUTING -i enp0s6 -p udp --dport 51820 -j ACCEPT
+
 # Destination NAT all other traffic to our router at 10.0.18.2
 PreUp = iptables -t nat -A PREROUTING -i enp0s6 -j DNAT --to-destination 10.0.18.2
 PostDown = iptables -t nat -D PREROUTING -i enp0s6 -j DNAT --to-destination 10.0.18.2
@@ -163,6 +167,87 @@ PostDown = iptables -t nat -D PREROUTING -i enp0s6 -j DNAT --to-destination 10.0
 PublicKey = ....
 AllowedIPs = 10.0.18.2/32
 ```
+
+This is all the same as I've explained in other posts but the jist is that we're setting up a simple WireGuard server and adding a few firewall rules that accept SSH and WireGuard traffic and forward everything else to the connected "client".
+
+#### The Router
+
+Now we're bordering rocket science... ok maybe not that crazy but still.
+
+I actually implemented this on a Mikrotik Router, so there's no `.conf` file per se, but I've written out the equivalent for you here:
+
+**Interface 0** (Gateway - Router)
+```
+[Interface]
+
+PrivateKey = ...
+
+Address = 10.0.18.2/30
+
+Table=100
+
+PreUp = iptables -t mangle -A PREROUTING -i wg0 -m state --state NEW -j CONNMARK --set-mark 10
+PostDown = iptables -t mangle -D PREROUTING -i wg0 -m state --state NEW -j CONNMARK --set-mark 10
+
+PreUp = iptables -t mangle -A PREROUTING ! -i wg0 -m connmark --mark 10 -j MARK --set-mark 10
+PostDown = iptables -t mangle -D PREROUTING ! -i wg0 -m connmark --mark 10 -j MARK --set-mark 10
+
+PreUp = ip rule add fwmark 10 table 100 priority 456
+PostDown = ip rule del fwmark 10 table 100 priority 456
+
+PreUp = ip rule add from 10.0.18.2 table 100 priority 456
+PostDown = ip rule del from 10.0.18.2 table 100 priority 456
+
+# TODO: Check exists
+# PreUp = iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE
+# PostDown = iptables -t nat -D POSTROUTING -o wg0 -j MASQUERADE
+
+[Peer]
+
+PublicKey = ...
+
+AllowedIPs = 0.0.0.0/0
+
+Endpoint = <cloud gateway public ip>:51820
+
+PersistentKeepalive = 25
+```
+
+**Interface 1** (Phone - Router)
+```
+[Interface]
+
+PrivateKey = ...
+
+Address = 10.0.17.1/24
+
+Table=101
+
+PreUp = iptables -t mangle -A PREROUTING -i wg1 -m state --state NEW -j CONNMARK --set-mark 11
+PostDown = iptables -t mangle -D PREROUTING -i wg1 -m state --state NEW -j CONNMARK --set-mark 11
+
+PreUp = iptables -t mangle -A PREROUTING ! -i wg1 -m connmark --mark 11 -j MARK --set-mark 11
+PostDown = iptables -t mangle -D PREROUTING ! -i wg1 -m connmark --mark 11 -j MARK --set-mark 11
+
+PreUp = ip rule add fwmark 10 table 101 priority 456
+PostDown = ip rule del fwmark 10 table 101 priority 456
+
+PreUp = ip rule add from 10.0.17.1 table 101 priority 456
+PostDown = ip rule del from 10.0.17.1 table 101 priority 456
+
+# TODO: Check exists
+# PreUp = iptables -t nat -A POSTROUTING -o wg1 -j MASQUERADE
+# PostDown = iptables -t nat -D POSTROUTING -o wg1 -j MASQUERADE
+
+[Peer]
+
+PublicKey = ...
+
+AllowedIPs = 192.168.17.0/24
+```
+
+<!-- TODO Try remove connmark stuff and just send stuff bound for 17 network over user-wg -->
+
 
 ## Moral Of The Story
 
