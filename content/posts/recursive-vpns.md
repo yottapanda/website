@@ -64,11 +64,11 @@ So that's terrible... Oh well, I'll try my best to explain it.
 
 Firstly, the solid lines indicate normal network connections. The dotted lines indicate a VPN connection.
 
-As you can see, there's one VPN line between My Phone and the Cloud Gateway. That's the trusted VPN that terminates on the Router (which acts as a Wireguard "server"). This line(VPN) traverses the Cloud Gateway, and gets wrapped in another layer of Wireguard.
+As you can see, there's one VPN line between My Phone and the Cloud Gateway. That's the trusted VPN that terminates on the Router (which acts as a WireGuard "server"). This line (VPN) traverses the Cloud Gateway, and gets wrapped in another layer of WireGuard.
 
-This second layer of Wireguard (the other dotted line) is the Peer to Peer VPN that allows us to have another WAN. In this case, the Cloud Gateway Server acts as the Wireguard "server" and the Router as the "client". Because we are initiating the connection outward, we circumvent our inability to punch through the CGNAT router from the internet.
+This second layer of WireGuard (the other dotted line) is the Peer to Peer VPN that allows us to have another WAN. In this case, the Cloud Gateway Server acts as the WireGuard "server" and the Router as the "client". Because we are initiating the connection outward, we circumvent our inability to punch through the CGNAT router from the internet.
 
-From the perspective of the phone, it's initiating a connection directly with the Cloud Gateway('s IP). The Cloud Gateway just happens to be forwarding all its packets across another Wireguard connection to the Router. If you follow the arrows, you can see the path that the Phone's VPN packets take to reach a web server on the Server.
+From the perspective of the phone, it's initiating a connection directly with the Cloud Gateway('s IP). The Cloud Gateway just happens to be forwarding all its packets across another WireGuard connection to the Router. If you follow the arrows, you can see the path that the Phone's VPN packets take to reach a web server on the Server.
 
 At this point I can't tell if this is extremely complicated or if I've just been overcomplicating it for the past 2 weeks whilst I've been wrangling it together. It could be that I'm just very used to it now 🤷‍♂️.
 
@@ -96,7 +96,7 @@ graph LR
     Gateway --> Router
 {{< /mermaid >}}
 
-Between the Cloud Gateway and the Router, we'll setup a VPN connection called the **WAN VPN**; named so because it tunnels traffic from the open internet without discretion (depending on how you configure it).
+Between the Cloud Gateway and the Router, we'll set up a VPN connection called the **WAN VPN**; named so because it tunnels traffic from the open internet without discretion (depending on how you configure it).
 
 Between the Phone and the Router, we'll set up a VPN connection called the **Private VPN**. This is because it grants access to the internal network of the router.
 
@@ -104,7 +104,7 @@ Let's go from least to most complex...
 
 ### The Phone
 
-All we need to do for the phone is set it up as a Wireguard **client** on our Private VPN.
+All we need to do for the phone is set it up as a WireGuard **client** on our Private VPN.
 
 It does not need to know anything about the WAN VPN since, as I said before, the whole forwarding process is transparent.
 
@@ -122,10 +122,10 @@ PrivateKey = ...
 [Peer]
 
 # Point to the gateway IP and the port that our private VPN "server" will listen on
-Endpoint = <gateway ip>:<private vpn port on router>
+Endpoint = <gateway server public ip>:<13131>
 
 # Allow client to connect to VPN endpoint and internal network respectively
-AllowedUPs = 192.168.17.1/32, 192.168.16.0/24
+AllowedIPs = 192.168.17.1/32, 192.168.16.0/24
 
 # (Optional) Maintain the connection so we can initiate connections out to the device from the internal network
 PersistentKeepalive = 25
@@ -136,7 +136,33 @@ PublicKey = ...
 
 ### The Gateway
 
+Now we need the Cloud Gateway, acting as the middle man. It will act as a WireGuard server for our router to connect to.
 
+Here's the configuration we're going to want:
+
+```
+[Interface]
+
+Address = 10.0.18.1/30
+
+ListenPort = 51820
+PrivateKey = ...
+
+# Allow ip forwarding
+PreUp = sysctl net.ipv4.ip_forward=1
+
+# Immediately accept connections on 2222 so we can still SSH into the cloud gateway
+PreUp = iptables -t nat -A PREROUTING -i enp0s6 -p tcp --dport 2222 -j ACCEPT
+PostDown = iptables -t nat -D PREROUTING -i enp0s6 -p tcp --dport 2222 -j ACCEPT
+
+# Destination NAT all other traffic to our router at 10.0.18.2
+PreUp = iptables -t nat -A PREROUTING -i enp0s6 -j DNAT --to-destination 10.0.18.2
+PostDown = iptables -t nat -D PREROUTING -i enp0s6 -j DNAT --to-destination 10.0.18.2
+
+[Peer]
+PublicKey = ....
+AllowedIPs = 10.0.18.2/32
+```
 
 ## Moral Of The Story
 
