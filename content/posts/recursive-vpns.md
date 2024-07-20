@@ -33,7 +33,7 @@ I like [Headscale](https://headscale.net/) even more, which is self-hosted, and 
 
 ## What Did You Actually Build?
 
-Firstly, I've set up a relatively simple Cloud Gateway, similar to what I described in my [other post](cloud-router). On top of that I've created another Wireguard server which acts as a tunnel into my internal network for trusted user devices like my phone when I'm out of the house. Let me draw it out for you:
+Firstly, I've set up a relatively simple Cloud Gateway, similar to what I described in my [other post](cloud-router). On top of that I've created another WireGuard server which acts as a tunnel into my internal network for trusted user devices like my phone when I'm out of the house. Let me draw it out for you:
 
 {{< mermaid >}}
 graph LR
