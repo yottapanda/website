@@ -1,7 +1,7 @@
 ---
 title: Recursive Wireguard
-date: 2024-07-09
-draft: true
+date: 2024-07-20
+draft: false
 description: &description VPNs inside VPNs inside VPNs inside VPNs.
 tags: &tags 
   - networking
@@ -70,7 +70,7 @@ This second layer of WireGuard (the other dotted line) is the Peer to Peer VPN t
 
 From the perspective of the phone, it's initiating a connection directly with the Cloud Gateway('s IP). The Cloud Gateway just happens to be forwarding all its packets across another WireGuard connection to the Router. If you follow the arrows, you can see the path that the Phone's VPN packets take to reach a web server on the Server.
 
-At this point I can't tell if this is extremely complicated or if I've just been overcomplicating it for the past 2 weeks whilst I've been wrangling it together. It could be that I'm just very used to it now 🤷‍♂️.
+At this point I can't tell if this is extremely complicated or if I've just been overcomplicating it for the past 2 weeks. It could be that I'm just very used to it now 🤷‍♂️.
 
 ## Implementation
 
@@ -143,10 +143,11 @@ Here's the configuration we're going to want:
 ```
 [Interface]
 
+PrivateKey = ...
+
 Address = 10.0.18.1/30
 
 ListenPort = 51820
-PrivateKey = ...
 
 # Allow ip forwarding
 PreUp = sysctl net.ipv4.ip_forward=1
@@ -168,9 +169,9 @@ PublicKey = ....
 AllowedIPs = 10.0.18.2/32
 ```
 
-This is all the same as I've explained in other posts but the jist is that we're setting up a simple WireGuard server and adding a few firewall rules that accept SSH and WireGuard traffic and forward everything else to the connected "client".
+This is all the same as I've explained in other posts, but the gist is that we're setting up a simple WireGuard server and adding a few firewall rules that accept SSH and WireGuard traffic and forward everything else to the connected "client".
 
-#### The Router
+### The Router
 
 Now we're bordering rocket science... ok maybe not that crazy but still.
 
@@ -184,23 +185,24 @@ PrivateKey = ...
 
 Address = 10.0.18.2/30
 
+# Set up routes on table 100, not main
 Table=100
 
+# Mark new connections started from wg0
 PreUp = iptables -t mangle -A PREROUTING -i wg0 -m state --state NEW -j CONNMARK --set-mark 10
 PostDown = iptables -t mangle -D PREROUTING -i wg0 -m state --state NEW -j CONNMARK --set-mark 10
 
+# Mark packets not originating from wg0 that have the above conenction mark
 PreUp = iptables -t mangle -A PREROUTING ! -i wg0 -m connmark --mark 10 -j MARK --set-mark 10
 PostDown = iptables -t mangle -D PREROUTING ! -i wg0 -m connmark --mark 10 -j MARK --set-mark 10
 
+# Route packets with the above mark using table 100
 PreUp = ip rule add fwmark 10 table 100 priority 456
 PostDown = ip rule del fwmark 10 table 100 priority 456
 
+# Route anything originating from the local wg interface using table 100
 PreUp = ip rule add from 10.0.18.2 table 100 priority 456
 PostDown = ip rule del from 10.0.18.2 table 100 priority 456
-
-# TODO: Check exists
-# PreUp = iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE
-# PostDown = iptables -t nat -D POSTROUTING -o wg0 -j MASQUERADE
 
 [Peer]
 
@@ -213,6 +215,8 @@ Endpoint = <cloud gateway public ip>:51820
 PersistentKeepalive = 25
 ```
 
+The above config connects to the cloud gateway and uses the conditional routing we went over in the original post. One thing to note is the `AllowedIPs` field being set to 0.0.0.0/0 (everywhere); This is needed because when the gateway forwards packets over the WireGuard connection, it doesn't masquerade their source addresses, so they appear to come directly from their origin and hence, we need to reply to that origin.
+
 **Interface 1** (Phone - Router)
 ```
 [Interface]
@@ -221,23 +225,7 @@ PrivateKey = ...
 
 Address = 10.0.17.1/24
 
-Table=101
-
-PreUp = iptables -t mangle -A PREROUTING -i wg1 -m state --state NEW -j CONNMARK --set-mark 11
-PostDown = iptables -t mangle -D PREROUTING -i wg1 -m state --state NEW -j CONNMARK --set-mark 11
-
-PreUp = iptables -t mangle -A PREROUTING ! -i wg1 -m connmark --mark 11 -j MARK --set-mark 11
-PostDown = iptables -t mangle -D PREROUTING ! -i wg1 -m connmark --mark 11 -j MARK --set-mark 11
-
-PreUp = ip rule add fwmark 10 table 101 priority 456
-PostDown = ip rule del fwmark 10 table 101 priority 456
-
-PreUp = ip rule add from 10.0.17.1 table 101 priority 456
-PostDown = ip rule del from 10.0.17.1 table 101 priority 456
-
-# TODO: Check exists
-# PreUp = iptables -t nat -A POSTROUTING -o wg1 -j MASQUERADE
-# PostDown = iptables -t nat -D POSTROUTING -o wg1 -j MASQUERADE
+ListenPort = 13131
 
 [Peer]
 
@@ -246,8 +234,117 @@ PublicKey = ...
 AllowedIPs = 192.168.17.0/24
 ```
 
-<!-- TODO Try remove connmark stuff and just send stuff bound for 17 network over user-wg -->
+The above config acts as the internal user WireGuard server. Nothing special at all. This is what a phone/laptop would connect to when outside the home network in order to gain access to it.
 
+### Sending Traffic To Services
+
+Great, so everything's wired up. The only thing left to do is actually allow traffic to get to the actual services.
+
+There are 2 types of services for our scenario. Either the service is on the router, e.g. A ssh server or web interface, or it's on another host e.g. A Minecraft server.
+
+For my purposes, I wanted to access the web interface of the router over the VPN. All I had to do was set the subnet as LAN in my Mikrotik server and the default firewalls took care of the rest.
+
+For the Minecraft server, I needed to add a Destination NAT rule in the firewall that points any traffic coming in on 25565 to my brother's laptop.
+
+I'll also likely be doing the same in the near future for all the services that are running on my home server such as this blog and my mail server.
+
+## The Meat
+
+This shouldn't have taken me so long to figure out and as usual, the solutions I came up with seem trivial now. There are however a few learning points that came out of this process.
+
+More specifically, I've learned one or two things about the inner workings of iptables/nftables. Firstly, for context, I've drawn out the table and chain flow:
+
+{{< mermaid >}}
+graph TD
+    PacketIn(Inbound Packet)
+
+    PacketOut(Outbound Packet)
+
+    subgraph PREROUTING
+        PreRaw(Raw)
+        ConnTrack1[[State/Connection Tracking]]
+        PreMangle(Mangle)
+        IsLocalSource{{localhost source?}}
+        PreNat(NAT)
+    end
+
+    RD1[[Routing Decision]]
+    
+    IsForThisHost{{for this host?}}
+
+    subgraph INPUT
+        InMangle(Mangle)
+        InFilter(Filter)
+        InNat(NAT)
+    end
+
+    subgraph FORWARD
+        ForMangle(Mangle)
+        ForFilter(Filter)
+    end
+
+    RD2[[Routing Decision]]
+
+    subgraph OUTPUT
+        OutRaw(Raw)
+        ConnTrack2[[State/Connection Tracking]]
+        OutMangle(Mangle)
+        OutNat(NAT)
+        RD3[[Routing Decision]]
+        OutFilter(Filter)
+    end
+
+    ReleaseOutbound[[Release to Outbound Interface]]
+
+    subgraph POSTROUTING
+        PostMangle(Mangle)
+        IsLocalDest{{localhost dest?}}
+        PostNat(NAT)
+    end
+
+    Process{Local Process}
+
+    PacketIn --> PreRaw
+    PreRaw --> ConnTrack1
+    ConnTrack1 --> PreMangle
+    PreMangle --> IsLocalSource
+    IsForThisHost -->|Yes| InMangle
+    IsForThisHost -->|No| ForMangle
+    PreNat --> RD1
+    RD1 --> IsForThisHost
+    IsLocalSource -->|No| PreNat
+    IsLocalSource -->|Yes| InMangle
+    ForMangle --> ForFilter
+    ForFilter --> ReleaseOutbound
+    ReleaseOutbound --> PostMangle
+    PostMangle --> IsLocalDest
+    IsLocalDest -->|Yes| PacketOut
+    IsLocalDest -->|No| PostNat
+    InMangle --> InFilter
+    InFilter --> InNat
+    InNat --> Process
+    Process --> RD2
+    RD2 --> OutRaw
+    OutRaw --> ConnTrack2
+    ConnTrack2 --> OutMangle
+    OutMangle --> OutNat
+    OutNat --> RD3
+    RD3 --> OutFilter
+    OutFilter --> ReleaseOutbound
+    PostNat --> PacketOut
+{{< /mermaid >}}
+
+I've adapted this diagram from [Phil Hagan's Version](https://stuffphilwrites.com/wp-content/uploads/2014/09/FW-IDS-iptables-Flowchart-v2019-04-30-1.png).
+
+### The Learnings
+
+1. The NAT table is only traversed for STATEFUL connections.
+
+    If you're trying to test connectivity with ICMP (Ping) packets, it won't work because they're completely stateless.
+
+2. WireGuard packets (sort of) go through the entire chain twice.
+
+    When an encrypted WireGuard packet arrives, it goes through prerouting and then input. After that, the local WireGuard process unwraps the encryption and spawns the contained packet on the WireGuard interface. That packet then traverses the whole firewall again as a completely separate entity.
 
 ## Moral Of The Story
 
@@ -255,4 +352,6 @@ All these shenanigans could have been easily avoided if the rest of the internet
 
 While I was writing this post, I remembered that there's quite a few [transition mechanisms](https://en.wikipedia.org/wiki/IPv6_transition_mechanism) which allow cross-communication between IPv4 and IPv6 networks in different capacities. 
 
-If there exists a mechanism whereby I can have one VPS translate IPv4 packets to IPv6 packets and forward them on to my internal network, that might be the way to go. That way I may not need any crazy VPNs. The only problem left to solve would be the complete ambiguity as to whether or not the IPv6 space that my ISP provides me is actually static...
+If there exists a mechanism whereby I can have one VPS translate IPv4 packets to IPv6 packets and forward them on to my internal network, that might be the way to go. That way I may not need any crazy VPNs. The only problem left to solve would be the complete ambiguity as to whether or not the IPv6 space that my ISP provides me is actually static... A problem for another day.
+
+For now, ciao 🫡.
