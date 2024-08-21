@@ -63,6 +63,8 @@ If you really want to use the tool now:
 - You can follow the instructions on the GitHub page to host it yourself.
 - Or you can get in touch with me and I can add you to the testers list.
 
+**UPDATE**: It has been approved! [syncify.thechubbypanda.dev](https://syncify.thechubbypanda.dev)
+
 ## Conclusion
 
 I doubt it would take Spotify long to fix this themselves, but they're not doing it so...
