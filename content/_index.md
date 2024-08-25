@@ -4,4 +4,4 @@ I think of myself as a Backend & DevOps Engineer, though my curiosity means that
 
 I'm currently working on a few things including but not limited to: my job at Storm Reply where I'm a Cloud Consultant, [FileDepot](posts/filedepot-intro) which is a fast and simple file sharing system, and rambling here about all the above.
 
-If you want to get in touch, my LinkedIn and X profiles are linked above. I don't bite 😉.
+If you want to get in touch (even if it's just to ask how I got my nickname 😉), my LinkedIn and X profiles are linked above.
