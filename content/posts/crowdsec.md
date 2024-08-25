@@ -2,7 +2,7 @@
 title: "Crowdsec"
 date: 2024-06-29
 draft: false
-description: &description A short foray into the world of Crowdsec
+description: &description A short foray into the world of Crowdsec.
 tags: &tags
   - security
 summary: *description
