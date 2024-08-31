@@ -13,7 +13,7 @@ keywords: *tags
 ---
 ## All I Want To Do Is Share My Songs
 
-I have a friend who's musical taste is a real mixed-bag. He's simultaneously stuck in the 2000s pop era and somehow also has an absolute blast listening to _my_ music. On numerous occasions he has asked me to share my playlist with him, but alas I've had to remind him each time that it's impossible.
+I have a friend whose musical taste is a real mixed-bag. He's simultaneously stuck in the 2000s pop era and somehow also has an absolute blast listening to _my_ music. On numerous occasions he has asked me to share my playlist with him, but alas I've had to remind him each time that it's impossible.
 
 Are you trying to share your "Liked Songs" now? Don't worry, I'll explain what's going on.
 
@@ -39,9 +39,9 @@ I chose a relatively simple tech stack for a relatively simple project:
 - HTMX
 - Tailwind
 
-These tools don't have any fluff. They are there to get the job done and nothing more. No fancy crap, just simple and to the point. Minimal abstraction to provide the most efficient developer experience while maintaining safety and maintainability.
+These tools don't have any fluff. Minimal enough to provide an efficient developer experience while enabling reliability and maintainability.
 
-I started by setting up authentication via Spotify. This was a breeze thanks to my OAuth2 experience, so much so that I did it manually. I didn't even realise that the Spotify library I intended to use had authentication abstracted away for me already 🥴. I left it using my manual method in the end, it works, doesn't it!
+I started by setting up authentication via Spotify. This was a breeze thanks to my OAuth2 experience, so much so that I did it manually. I didn't even realise that the Spotify library I intended to use had authentication abstracted away for me already 🥴. I left it using my manual method in the end. It works, doesn't it!
 
 The next step was to get the songs syncing. This involved a lot of playing around with the Spotify API (which happens to be particularly well documented 👏). After a few hours, I had a rather janky system working. The process ended up as follows:
 
@@ -50,7 +50,11 @@ The next step was to get the songs syncing. This involved a lot of playing aroun
 3. Read the user's Liked Songs
 4. Write them into the empty playlist
 
+There's definitely a speed improvement to be made here; if I were to parallelize the truncation and reading parts, returning users who need their playlist truncated would, in theory, have a better experience.
+
 Lastly came polishing. I went to [v0.dev](https://v0.dev) and generated a simple but well styled ui (which I converted to Gomponents), setup some feedback with HTMX and set it up to build to a Docker container.
+
+Since the Spotify API is kinda slow, I might switch the simple post request to a websocket so that I can return live updates to the UI in a progress bar instead of just a spinner.
 
 ## Links
 
