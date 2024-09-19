@@ -1,8 +1,8 @@
 ---
-title: "Side Quest: Syncify"
+title: "Syncify"
 date: 2024-06-21
 draft: false
-description: &description Making a tool that finally lets you share your Liked Songs.
+description: &description Making a tool that finally lets you share your Spotify Liked Songs.
 tags: &tags
   - docker
   - spotify
