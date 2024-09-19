@@ -82,6 +82,8 @@ Grant Types (also referred to as Flows) are methods by which a client can acquir
 
 #### Password Grant (Deprecated)
 
+### Full Example
+
 ## OpenID Connect (OIDC)
 
 ### RSA
