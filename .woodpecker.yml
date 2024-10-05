@@ -1,5 +1,5 @@
 steps:
-  test:
+  lfs:
     image: woodpeckerci/plugin-git
     commands:
       - git submodule foreach git lfs pull
