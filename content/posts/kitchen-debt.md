@@ -1,7 +1,7 @@
 ---
 title: "Kitchen Debt"
 date: 2024-10-05
-draft: true
+draft: false
 description: &description An analogy for tech debt for your non-tech peers.
 tags: &tags
   - human interaction
