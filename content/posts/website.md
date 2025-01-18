@@ -109,7 +109,7 @@ Now that we have the site building and running well, we should consider security
 - X-Content-Type-Options
 - X-Frame-Options
 
-As it so happens, these headers are core to modern internet security, providing the ability to prevent various attacks such as Cross Site Scripting or ClickJacking and generally improving the safety of your site for your viewer. As an example, [here's the report for this website](https://securityheaders.com/?q=https%3A%2F%2Fthechubbypanda.net&followRedirects=on).
+As it so happens, these headers are core to modern internet security, providing the ability to prevent various attacks such as Cross Site Scripting or ClickJacking and generally improving the safety of your site for your viewer. As an example, [here's the report for this website](https://securityheaders.com/?q=https%3A%2F%yottapanda.com&followRedirects=on).
 
 To set these up with Nginx, we simply have to add the headers to the configuration file (`/etc/nginx/nginx.conf`) under one of three sections:
 

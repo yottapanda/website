@@ -360,6 +360,6 @@ A similar process can be employed to expose whatever service you want to.
 
 ## Act 5: Conclusion
 
-Hopefully this has worked out alright for you and helped you circumvent your CGNAT (or equivalent) situation. It's working beautifully for me so far. If you have any questions, you can find me on [Twitter (X)](https://twitter.com/thechubbypanda0).
+Hopefully this has worked out alright for you and helped you circumvent your CGNAT (or equivalent) situation. It's working beautifully for me so far. If you have questions, I might have a social link on the home page.
 
 I wouldn't have been able to write this article without the help of [Justin Ludwig](https://www.procustodibus.com/authors/justin-ludwig/) and his 2 articles [WireGuard Port Forwarding From the Internet](https://www.procustodibus.com/blog/2022/09/wireguard-port-forward-from-internet/) and [WireGuard Port Forwarding From the Internet to Other Networks](https://www.procustodibus.com/blog/2023/11/wireguard-port-forward-from-internet-multi-hop/). His graphics are much cooler than mine, so if something doesn't make sense here, his will.
