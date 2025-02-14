@@ -1,6 +1,6 @@
 ---
 title: OAuth & Modern Authentication
-date: 2024-09-20
+date: 2025-02-14
 draft: true
 description: &description The inner workings of OAuth and OIDC.
 tags: &tags
@@ -18,7 +18,7 @@ The RockYou dump provided researchers and hackers alike a window into human habi
 
 ### Humans
 
-Let's talk about those human habits; One of the most common things we do with passwords is reuse them on different websites (yes it still counts as re-use if you change the number on the end). Jack Rhysider recently published a [new episode of the Darknet Diaries podcast](https://darknetdiaries.com/episode/148/) (highly recommend), in which he talks to someone who was able to steal unreleased music from artists partially because they re-used their passwords on different websites. One company gets hacked, and suddenly the attackers have access to all your accounts, everywhere.
+Let's talk about those human habits; One of the most common things we do with passwords is reuse them on different websites (yes it still counts as re-use if you change the number on the end). Jack Rhysider published an  [episode of the Darknet Diaries podcast](https://darknetdiaries.com/episode/148/) (highly recommend), in which he talks to someone who was able to steal unreleased music from artists partially because they re-used their passwords on different websites. One company gets hacked, and suddenly the attackers have access to all your accounts, everywhere.
 
 Another poor security tactic of humans is creating passwords that relate to things they're unlikely to forget such as a pet's name or a significant date. I'm looking at you, Mr `fluffy1995`. All it takes is for someone to look at your Instagram (where you undoubtedly worship your pet and have your age in your bio) and then have a few educated guesses at your password.
 
@@ -31,6 +31,8 @@ Thankfully nowadays, ([most](https://cybernews.com/security/rockyou2024-largest-
 2. The next step is to hash the password, an (ideally) one way transformation to a standard length output. One of the earlier widely used hashing algorithms was MD5, unfortunately it was and is quite easy to break; The likes of SHA-256 have now superseded it. Hashing our salted password with SHA-256 gives us `03e38186e2037be20bffb263869d6332b3aa42b2349d09aff1a5c7ad5af7a3da`. 
 
 Now even if an attacker gets the database, they could likely never figure out what your original password was.
+
+While I've just explained how this works in principle, the method above still isn't secure. Don't roll this stuff yourself; just use something like bcrypt or argon2id.
 
 ### Brute Force
 
@@ -74,17 +76,138 @@ Grant Types (also referred to as Flows) are methods by which a client can acquir
 
 #### Authorization Code + PKCE
 
+The authorization code flow invloves a temporary credential (code 🤯) issued by the authorization server to a client application after a user successfully authenticates and grants consent. It serves as an intermediate step before obtaining an access token.
+
+{{< mermaid >}}
+sequenceDiagram
+    participant User
+    participant Client
+    participant Authorization Server
+    participant Resource Server
+
+    User->>Client: Initiates Authorization Request
+    Note over Client: Generate Code Verifier, Code Challenge & State
+    Client->>Authorization Server: Authorization Request (with Code Challenge & State)
+    Authorization Server->>User: Request User Approval
+    User->>Authorization Server: Approves Request
+    Authorization Server->>Client: Authorization Code (includes State)
+
+    Note over Client: Verify State, Exchange Code for Token (with Code Verifier)
+    Client->>Authorization Server: Token Request (with Code Verifier)
+    Authorization Server->>Client: Access Token
+
+    Note over Client: Access Protected Resource
+    Client->>Resource Server: Request Resource (with Access Token)
+    Resource Server->>Client: Protected Resource
+{{< /mermaid >}}
+
+As of OAuth 2.1, PKCE is a required component of an Authorization Code flow, hence we're not going to talk about them separately. Just know that you will probably find auth code flows without code challenges/verifiers in the wild. Without PKCE, a client secret is always required.
+
 #### Client Credentials
+
+This flow is more for machine-to-machine communication; often replacing something simple like a periodic data fetch from an API.
+
+{{< mermaid >}}
+sequenceDiagram
+    participant Client as Client
+    participant AuthServer as Authorization Server
+    participant ResourceServer as Resource Server
+
+    Client->>AuthServer: Request access token (with client id and secret)
+    Note over AuthServer: Validate client credentials
+    AuthServer->>Client: Return access token
+    Client->>ResourceServer: API Request with Access Token
+    Note over  ResourceServer: Validate access token
+    ResourceServer->>Client: Return resource data
+{{< /mermaid >}}
+
+This might look like basic auth with extra steps but it does actually provide some benefits if your use-case warrants the complexity overhead:
+
+- Granular access control via scopes
+- Short-lived credentials with (almost) built-in rotation
+- Better integration with things JWTs for stateless auth
 
 #### Device Code
 
+This flow is used by devices or applications with limited input capabilities like IoT devices. It allows users to authenticate and authorize the application on a secondary device, typically a mobile phone or desktop computer, by using a unique code displayed on the device.
+
+{{< mermaid >}}
+sequenceDiagram
+    participant Client as Device
+    participant User
+    participant AuthorizationServer
+    participant ResourceServer
+    
+    Client->>AuthorizationServer: Request device code and user code
+    AuthorizationServer->>Client: Return device code and user code
+    Client->>User: Display user code and URL
+    User->>UserDevice: Open URL and enter user code
+    UserDevice->>AuthorizationServer: User enters credentials and authorizes
+    AuthorizationServer->>UserDevice: User authenticated and authorized
+    Client->>AuthorizationServer: Polling for access token
+    AuthorizationServer->>Client: Access token granted
+    Client->>ResourceServer: Access resources with token
+    ResourceServer->>Client: Return requested resources
+{{< /mermaid >}}
+
+I actually think this might be a good way to handle mobile app authentication instead of using weird webview integrations but I have yet to prove out my theory. Reach out if you know how it should work.
+
 #### Refresh Token
+
+Remember how we've said so far that access tokens are short lived? Well I think we can both agree that needing to log into your authentication provider every 5 minutes would be a terrible user experience.
+
+Thankfully this is solved using refresh tokens. When performing an auth code flow, the authorization server can optionally also return a **refresh token**.
+
+Using the refresh token, you can (only) perform a refresh token flow to get a new access token to replace an expired one; all without any user interaction.
+
+{{< mermaid >}}
+sequenceDiagram
+    participant U as User
+    participant C as Client
+    participant AS as Authorization Server
+    participant RS as Resource Server
+
+    Note over C: Access token expires
+    U->>C: Initiate request for data
+    C->>AS: Send refresh token
+    Note over AS: Validate refresh token
+    AS->>C: Issue new access token (and potentially new refresh token)
+    C->>RS: API request with new access token
+    Note over RS: Validate access token
+    RS->>C: API response
+    C->>U: Display response for user
+{{< /mermaid >}}
+
+Notice how the user doesn't have to interact with the Authorization server this time! Very slick 😉.
 
 #### Password Grant (Deprecated)
 
-### Full Example
+This **deprecated** flow essentially just gets the client to pass the user's username and password to the authorization server to get an access token.
+
+This was deprecated because, as you can imagine, it's not the best idea to let the client handle the users actual credentials in case it is malicious.
+
+Do not use this flow if you can help it. I've really wanted to in the past for things like [my work on implementing OAuth](./dms-oauth2.md/#trials-and-deprecations) for [Docker Mailserver](https://github.com/docker-mailserver/docker-mailserver) but it's just not the way.
 
 ## OpenID Connect (OIDC)
+
+GPT:
+OpenID Connect (OIDC) extends OAuth 2.0 by adding authentication capabilities to the protocol. While OAuth 2.0 focuses on authorization (granting access to resources), OIDC adds a layer on top of OAuth to provide identity verification, allowing clients to authenticate users.
+
+Here's what OIDC brings to OAuth 2.0:
+
+Authentication: OAuth 2.0 alone only allows for authorization (permissions to access resources), but OIDC provides a standardized way for clients to authenticate users (i.e., to verify their identity).
+
+ID Token: OIDC introduces the ID Token, a JWT (JSON Web Token) that contains information about the authenticated user. This token is issued alongside the access token in OAuth 2.0 flows, and it allows the client to get the user's identity details (like their name, email, etc.).
+
+UserInfo Endpoint: OIDC specifies a UserInfo Endpoint that provides additional details about the authenticated user, allowing the client to retrieve more information, such as profile data, beyond what's in the ID token.
+
+Standard Scopes: OIDC introduces a new scope, openid, which signals to the authorization server that the client wants to authenticate the user and receive an ID token. Other standard OIDC scopes (like profile, email, address) let the client request specific user details.
+
+Discovery and Dynamic Registration: OIDC introduces mechanisms for clients to discover information about the identity provider, like authorization endpoints and supported features, through a discovery document (found at .well-known/openid-configuration). This makes integration easier by reducing manual configuration.
+
+Standardized Protocol: While OAuth 2.0 can be used for both authorization and authentication, OIDC standardizes how authentication should be implemented, which helps avoid confusion and inconsistency across implementations.
+
+In essence, OIDC enhances OAuth 2.0 by enabling both authorization (what OAuth does) and authentication (what OIDC adds), providing a complete solution for managing both identity and access control.
 
 ### RSA
 
