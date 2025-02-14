@@ -16,7 +16,7 @@ keywords: *tags
 My short hiatus from blogging is over, but I haven't been idle!
 I have something big in the works; sneak peeks are on the way 😉.
 
-## Remember When I Made a ["Cloud Router"](cloud-router.md)?
+## Remember When I Made a ["Cloud Router"](./cloud-router.md)?
 
 So it turns out, my cloud router exists already under a different guise: a network gateway but in the ✨ cloud ✨. You learn something new every day!
 
