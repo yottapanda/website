@@ -7,3 +7,6 @@ hugo_stats.json
 
 # Obsidian
 .obsidian/
+
+# IntelliJ
+/.idea/

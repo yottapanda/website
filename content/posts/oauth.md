@@ -121,7 +121,7 @@ sequenceDiagram
     ResourceServer->>Client: Return resource data
 {{< /mermaid >}}
 
-This might look like basic auth with extra steps but it does actually provide some benefits if your use-case warrants the complexity overhead:
+This might look like basic auth with extra steps, but it does actually provide some benefits if your use-case warrants the complexity overhead:
 
 - Granular access control via scopes
 - Short-lived credentials with (almost) built-in rotation
@@ -190,24 +190,21 @@ Do not use this flow if you can help it. I've really wanted to in the past for t
 
 ## OpenID Connect (OIDC)
 
-GPT:
-OpenID Connect (OIDC) extends OAuth 2.0 by adding authentication capabilities to the protocol. While OAuth 2.0 focuses on authorization (granting access to resources), OIDC adds a layer on top of OAuth to provide identity verification, allowing clients to authenticate users.
+OIDC is an extension of OAuth 2.0 that adds authentication capabilities to the protocol (where OAuth 2.0 focuses on authorization).
 
-Here's what OIDC brings to OAuth 2.0:
+Identity is a core component of authentication (proving the user is who they say they are), and is introduced by the concept of an ID Token, which is a JSON Web Token (JWT) that contains information about the authenticated user. This token is issued alongside the access token in the OAuth flows shown earlier.
 
-Authentication: OAuth 2.0 alone only allows for authorization (permissions to access resources), but OIDC provides a standardized way for clients to authenticate users (i.e., to verify their identity).
+Alongside the ID Token, OIDC adds a UserInfo Endpoint that provides a client with similar data to what's in the ID Token.
 
-ID Token: OIDC introduces the ID Token, a JWT (JSON Web Token) that contains information about the authenticated user. This token is issued alongside the access token in OAuth 2.0 flows, and it allows the client to get the user's identity details (like their name, email, etc.).
+OIDC also introduces a quality of life discovery mechanism. This allows clients to find all the endpoints and features provided by an auth provider using just one standardized URL (`example.com/.well-known/openid-configuration`).
 
-UserInfo Endpoint: OIDC specifies a UserInfo Endpoint that provides additional details about the authenticated user, allowing the client to retrieve more information, such as profile data, beyond what's in the ID token.
+## Javascript Web Tokens (JWTs)
 
-Standard Scopes: OIDC introduces a new scope, openid, which signals to the authorization server that the client wants to authenticate the user and receive an ID token. Other standard OIDC scopes (like profile, email, address) let the client request specific user details.
+I should probably explain what JWTs are since I mentioned them in the previous section.
 
-Discovery and Dynamic Registration: OIDC introduces mechanisms for clients to discover information about the identity provider, like authorization endpoints and supported features, through a discovery document (found at .well-known/openid-configuration). This makes integration easier by reducing manual configuration.
+A JWT is a base64-encoded JSON object, which contains a header and a payload and optionally a signature. The header contains information required to decode the payload and verify the signature. The payload contains the... data we actually care about.
 
-Standardized Protocol: While OAuth 2.0 can be used for both authorization and authentication, OIDC standardizes how authentication should be implemented, which helps avoid confusion and inconsistency across implementations.
-
-In essence, OIDC enhances OAuth 2.0 by enabling both authorization (what OAuth does) and authentication (what OIDC adds), providing a complete solution for managing both identity and access control.
+[//]: # (TODO)
 
 ### RSA
 
