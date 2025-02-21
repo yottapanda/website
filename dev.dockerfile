@@ -2,7 +2,7 @@ FROM archlinux:latest AS build
 RUN pacman -Sy hugo --noconfirm
 WORKDIR /build
 COPY . .
-RUN hugo
+RUN hugo -DF
 
 FROM nginx:alpine
 COPY target/etc/nginx/nginx.conf /etc/nginx/nginx.conf

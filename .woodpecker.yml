@@ -1,10 +1,24 @@
+when:
+  branch:
+    - main
+
 steps:
   lfs:
     image: woodpeckerci/plugin-git
     commands:
       - git submodule foreach git lfs pull
       - git submodule foreach git lfs checkout
-  publish:
+  publish-dev:
+    image: plugins/kaniko
+    settings:
+      registry: git.kapdee.uk
+      repo: git.kapdee.uk/${CI_REPO}
+      tags: dev
+      dockerfile: dev.dockerfile
+      username: $CI_REPO_OWNER
+      password:
+        from_secret: packages_token
+  publish-prod:
     image: plugins/kaniko
     settings:
       registry: git.kapdee.uk
@@ -14,5 +28,3 @@ steps:
       username: $CI_REPO_OWNER
       password:
         from_secret: packages_token
-    when:
-      - branch: main
