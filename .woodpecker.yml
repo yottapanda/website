@@ -1,6 +1,6 @@
 when:
-  branch:
-    - main
+  - branch: main
+    event: push
 
 steps:
   lfs:
