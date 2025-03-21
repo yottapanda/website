@@ -1,6 +1,6 @@
 ---
 title: OAuth & Modern Authentication
-date: 2025-02-14
+date: 2025-03-21
 draft: true
 description: &description The inner workings of OAuth and OIDC.
 tags: &tags
@@ -9,6 +9,10 @@ tags: &tags
 summary: *description
 keywords: *tags
 ---
+### Preface
+
+I have been writing this since before my [Kitchen Debt](./kitchen-debt.md) post. It has taken far too long, so please, _enjoy to the fullest extent possible_.
+
 ## A Short (I Lie) History Lesson
 
 For longer than I've been alive, programmers have been implementing password authentication into their services and applications. Unfortunately, over the years passwords have to proven to be rather insecure and inconvenient;
@@ -204,7 +208,54 @@ I should probably explain what JWTs are since I mentioned them in the previous s
 
 A JWT is a base64-encoded JSON object, which contains a header and a payload and optionally a signature. The header contains information required to decode the payload and verify the signature. The payload contains the... data we actually care about.
 
-[//]: # (TODO)
+Let's look an example one:
+
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvZU1hbWEiLCJpYXQiOjE1MTYyMzkwMjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+```
+
+So as you can see, all the information you could possibly need in an ID token is contained within the string above. I'm joking don't worry 😂.
+
+We can actually glean a little information from the base64 encoded string above though. We can see the three distinct sections, separated by periods.
+
+### Header
+
+```json
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+```
+
+The header is a JSON object containing a signing algorithm (`alg`) and a type (`typ`) which in our case is always going to be `"JWT"`.
+
+### Payload
+
+```json
+{
+  "sub": "1234567890",
+  "name": "Joe Mama",
+  "iat": 1516239022
+}
+```
+
+The payload contains the "claims" that we ask for when we send our list of scopes to the authorization server.
+
+You can find a list of standard claims [on the openid website](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims).
+
+### Signature
+
+```text
+SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+```
+
+This is the only part that's not JSON, it's generated using the algorithm from the header, and it should be verifiable by the client. 
+
+In this example, the token is using `HS256` a symmetric signing algoritm.  
+This means the server and the client share a key that they pass to the algorithm along with the payload contents.  
+Performing the signature generation will spit out the contents of the signature. Unless there's some naughty stuff going on in the middle, both sides will always generate the same signature.
+
+Another option for the signature is `RS256` which is asymmetric; The server will first use a private key to generate the hash of the payload. Then the client grabs the server's public key and verifies the signature. The algorithm underneath `RS256` is RSA. Let's get into how it works.
 
 ### RSA
 
@@ -242,3 +293,15 @@ Let's say I have my private key and I hand my public key to my friend Donald (Du
 The typical use-case for RSA is for Donald to send me a secure message. To do this, he would write his message and encrypt it with my public key. He would then send this encrypted message to me. Anyone who tries to read it along the way cannot because it is encrypted. I would then use my private key (that I've hopefully not leaked) to decrypt and read Donald's message. 
 
 The other use-case would be if I've sent a message to Donald, and he wants to be sure it came from me. In this scenario, I would encrypt my message with my private key before sending it to him. Donald would be able to decrypt it with my public key only if the message was encrypted with my private key. This implies that the message did indeed, come from me. (Assuming again, that I haven't accidentally leaked my private key)
+
+So what use-case is suited to RS256?
+
+That's right, the second one! It allows us to verify the signature came from who we expect.
+
+## That's All Folks
+
+Congratulations or I'm sorry, somehow you've made it this far... you either love security or need to touch grass. 
+
+Either way, next time you click ‘Sign in with Google,’ you’ll know exactly what’s happening under the hood.
+
+And remember, passwords bad, use a password manager (randomly generated per website) if you have to use them, otherwise I hear passkeys are in fashion at the moment.
