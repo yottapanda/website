@@ -80,7 +80,8 @@ Grant Types (also referred to as Flows) are methods by which a client can acquir
 
 #### Authorization Code + PKCE
 
-The authorization code flow invloves a temporary credential (code 🤯) issued by the authorization server to a client application after a user successfully authenticates and grants consent. It serves as an intermediate step before obtaining an access token.
+The authorization code flow involves a temporary credential (code 🤯) issued by the authorization server to a client application after a user successfully authenticates and grants consent.  
+It serves as an intermediate step before obtaining an access token.
 
 {{< mermaid >}}
 sequenceDiagram
@@ -251,7 +252,7 @@ SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
 This is the only part that's not JSON, it's generated using the algorithm from the header, and it should be verifiable by the client. 
 
-In this example, the token is using `HS256` a symmetric signing algoritm.  
+In this example, the token is using `HS256` a symmetric signing algorithm.  
 This means the server and the client share a key that they pass to the algorithm along with the payload contents.  
 Performing the signature generation will spit out the contents of the signature. Unless there's some naughty stuff going on in the middle, both sides will always generate the same signature.
 
@@ -261,7 +262,7 @@ Another option for the signature is `RS256` which is asymmetric; The server will
 
 Over the years, we've been blessed with algorithms that can provide near-perfect security. The example most people will know is RSA which has been widely used for decades at this point and (at a sufficient key length) is considered perfectly secure today.
 
-RSA is a "public-key cryptosystem"... yeah I don't like Wikipedia drool either. In human terms; RSA utilises 2 keys, a public and private key, to encrypt and decrypt data using some clever one-way mathematics. I say one-way because trying to break the encryption without the other key is effectively impossible, especially at large key lengths.
+RSA is a "public-key cryptosystem"... yeah I don't like Wikipedia drool either. In human terms; RSA utilizes 2 keys, a public and private key, to encrypt and decrypt data using some clever one-way mathematics. I say one-way because trying to break the encryption without the other key is effectively impossible, especially at large key lengths.
 
 For example, here's a private key:
 
