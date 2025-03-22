@@ -1,7 +1,7 @@
 ---
 title: OAuth & Modern Authentication
 date: 2025-03-21
-draft: true
+draft: false
 description: &description The inner workings of OAuth and OIDC.
 tags: &tags
   - oauth
@@ -11,7 +11,7 @@ keywords: *tags
 ---
 ### Preface
 
-I have been writing this since before my [Kitchen Debt](./kitchen-debt.md) post. It has taken far too long, so please, _enjoy to the fullest extent possible_.
+I have been writing this since before my [Kitchen Debt](./kitchen-debt.md) post. It has taken far too long, so please, _enjoy to the fullest extent possible_ 🥲.
 
 ## A Short (I Lie) History Lesson
 
