@@ -59,7 +59,8 @@ Very simple, we just execute raw SQL with some fancy parameter insertion done fo
 
 The ORM portion (what we're using at my new company) allows us to specify almost everything in a Pythonic manner such as our schema:
 
-```
+```python
+# https://docs.sqlalchemy.org/en/20/tutorial/index.html
 from typing import Optional
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -75,7 +76,8 @@ class User(Base):
 
 and our queries:
 
-```
+```python
+# https://docs.sqlalchemy.org/en/20/tutorial/index.html
 from sqlalchemy import select
 stmt = select(User).where(User.name == "spongebob")
 with Session(engine) as session:
