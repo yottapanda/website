@@ -1,7 +1,7 @@
 ---
 title: AI is Outdated
 date: 2025-03-30
-draft: true
+draft: false
 description: &description Using an LLM as a software engineer just means you're writing outdated code.
 tags: &tags
   - ai
