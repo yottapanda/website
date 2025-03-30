@@ -16,7 +16,7 @@ keywords: *tags
 I've recently started working for a new company as a DevOps Engineer 🥳. 
 We use Python exclusively for our projects here; Picking it up again has been an... _interesting_ experience.
 I am reminded of how little fun I have when getting Python to work for anything beyond scripting.
-That's a little beyond the point of this post, though.
+That's a rant for another time, though.
 
 Soon after I joined the company, I was tasked with introducing separate deployment environments; production, staging, etc.
 At the time, they had one database instance handling the live service and their development work simultaneously.
@@ -28,7 +28,7 @@ In order to avoid this, I went on the hunt for a migration management tool.
 ## Alembic
 
 I came across a tool called Alembic. 
-It appears to be the standard choice for handling database migrations in Python, like the DotNet Entity Framework might be for C#.
+It appears to be the standard choice for handling database migrations in Python, like the .Net Entity Framework might be for C#.
 Unfortunately, the app was using raw SQL with `pymysql`, the low-level database driver for MySQL databases.
 We'd be missing out on half of Alembic's functionality if we stuck with what we had.
 Thankfully, we had a single file with all the database queries written in raw SQL and there wasn't that many.
@@ -37,8 +37,8 @@ So we decided to tweak our approach to database logic early.
 ## SQLAlchemy
 
 Alembic is designed to use SQLAlchemy under the hood to achieve things like automatic migration generation.
-Based on minimal internet browsing, SQLAlchemy appears to be the defacto option for Python database work, which makes sense given the Alembic integration.
-As such I had us adopt migrate our codebase to it.
+Based on minimal internet browsing, SQLAlchemy appears to be the de facto option for Python database work, which makes sense given the Alembic integration.
+As such I had us adopt and migrate our codebase to it.
 
 SQLAlchemy has 2 usage patterns: 
 
@@ -85,7 +85,7 @@ with Session(engine) as session:
 
 While I enjoy raw SQL, this seamless, Pythonic way of interacting with the database is a joy to work with.
 
-We opted for the ORM option since it allowed us to declaratively write our database Schema and have Alembic automatically generate migrations when we changed it.
+We opted for the ORM option since it allowed us to declaratively write our database schema and have Alembic automatically generate migrations when we changed it.
 
 ## LLMs Make Us FAST
 
@@ -96,7 +96,7 @@ Simply do a little prompt tweaking with a sample database query:
 
 Then feed it the rest of the file and copy pasta into your code...
 
-Lastly test it? Then again, LLM's are always right so maybe there's no need to waste more time 😂💀.
+Lastly, test it? Then again, LLMs are always right so maybe there's no need to waste more time 😂💀.
 
 To be fair it worked quite well. Only some minor tweaks required to tidy up after ChatGPT.
 
@@ -106,7 +106,7 @@ Here's the thing, LLMs are great for things that don't change.
 
 > Hey ChatGPT, old chum! Could you please explain to me why the sky is blue?
 
-This is a great prompt. Unless physics gets upturned tomorrow, the LLM will be correct in its answer.
+This is a great prompt. Unless physics is upturned tomorrow, the LLM will be correct in its answer.
 
 Code on the other hand, boy does that change FAST.
 
@@ -117,7 +117,7 @@ As it turns out, SQLAlchemy had a major release sometime between when ChatGPT 3.
 Everything it wrote was out of date by a mile. The only reason it worked is because the SQLAlchemy team managed to maintain near perfect backwards compatibility. Unfortunately "near" is not enough.
 
 Recently, I went to the up-to-date docs to write a specific type of query (I needed some weird join syntax).
-Low and behold, I found my copy pasta'd example spitting errors back at me.
+Lo and behold, I found my copy pasta'd example spitting errors back at me.
 
 I trawled through stack traces for hours trying to find where I'd screwed up.
 
@@ -132,6 +132,6 @@ It did speed up the initial implementation by a huge factor, I have no doubt abo
 However, the time I had to spend debugging and then manually updating the schema code? 
 Likely about the same as if I had just checked the docs in the first place.
 
-Saying all this, perhaps if I had more closely validated what the LLM was spitting out... Perhaps cross referencing the docs and actually understanding the code that I was writing...
+That said, perhaps if I had more closely validated what the LLM was spitting out... Perhaps cross referencing the docs and actually understanding the code that I was writing...
 
 Nah, AI go brrrr.
