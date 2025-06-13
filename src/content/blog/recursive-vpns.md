@@ -334,7 +334,7 @@ graph TD
     PostNat --> PacketOut
 ```
 
-I've adapted this diagram from [Phil Hagan's Version](https://stuffphilwrites.com/wp-content/uploads/2014/09/FW-IDS-iptables-Flowchart-v2019-04-30-1.png).
+I've adapted this diagram from [Phil Hagan's Version](https://stuffphilwrites.com/2014/09/iptables-processing-flowchart/).
 
 ### The Learnings
 
