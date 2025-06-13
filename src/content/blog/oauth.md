@@ -83,7 +83,7 @@ Grant Types (also referred to as Flows) are methods by which a client can acquir
 The authorization code flow involves a temporary credential (code 🤯) issued by the authorization server to a client application after a user successfully authenticates and grants consent.  
 It serves as an intermediate step before obtaining an access token.
 
-{{< mermaid >}}
+```mermaid
 sequenceDiagram
     participant User
     participant Client
@@ -104,7 +104,7 @@ sequenceDiagram
     Note over Client: Access Protected Resource
     Client->>Resource Server: Request Resource (with Access Token)
     Resource Server->>Client: Protected Resource
-{{< /mermaid >}}
+```
 
 As of OAuth 2.1, PKCE is a required component of an Authorization Code flow, hence we're not going to talk about them separately. Just know that you will probably find auth code flows without code challenges/verifiers in the wild. Without PKCE, a client secret is always required.
 
@@ -112,7 +112,7 @@ As of OAuth 2.1, PKCE is a required component of an Authorization Code flow, hen
 
 This flow is more for machine-to-machine communication; often replacing something simple like a periodic data fetch from an API.
 
-{{< mermaid >}}
+```mermaid
 sequenceDiagram
     participant Client as Client
     participant AuthServer as Authorization Server
@@ -124,7 +124,7 @@ sequenceDiagram
     Client->>ResourceServer: API Request with Access Token
     Note over  ResourceServer: Validate access token
     ResourceServer->>Client: Return resource data
-{{< /mermaid >}}
+```
 
 This might look like basic auth with extra steps, but it does actually provide some benefits if your use-case warrants the complexity overhead:
 
@@ -136,7 +136,7 @@ This might look like basic auth with extra steps, but it does actually provide s
 
 This flow is used by devices or applications with limited input capabilities like IoT devices. It allows users to authenticate and authorize the application on a secondary device, typically a mobile phone or desktop computer, by using a unique code displayed on the device.
 
-{{< mermaid >}}
+```mermaid
 sequenceDiagram
     participant Client as Device
     participant User
@@ -153,7 +153,7 @@ sequenceDiagram
     AuthorizationServer->>Client: Access token granted
     Client->>ResourceServer: Access resources with token
     ResourceServer->>Client: Return requested resources
-{{< /mermaid >}}
+```
 
 I actually think this might be a good way to handle mobile app authentication instead of using weird webview integrations but I have yet to prove out my theory. Reach out if you know how it should work.
 
@@ -165,7 +165,7 @@ Thankfully this is solved using refresh tokens. When performing an auth code flo
 
 Using the refresh token, you can (only) perform a refresh token flow to get a new access token to replace an expired one; all without any user interaction.
 
-{{< mermaid >}}
+```mermaid
 sequenceDiagram
     participant U as User
     participant C as Client
@@ -181,7 +181,7 @@ sequenceDiagram
     Note over RS: Validate access token
     RS->>C: API response
     C->>U: Display response for user
-{{< /mermaid >}}
+```
 
 Notice how the user doesn't have to interact with the Authorization server this time! Very slick 😉.
 
@@ -191,7 +191,7 @@ This **deprecated** flow essentially just gets the client to pass the user's use
 
 This was deprecated because, as you can imagine, it's not the best idea to let the client handle the users actual credentials in case it is malicious.
 
-Do not use this flow if you can help it. I've really wanted to in the past for things like [my work on implementing OAuth](./dms-oauth2.md/#trials-and-deprecations) for [Docker Mailserver](https://github.com/docker-mailserver/docker-mailserver) but it's just not the way.
+Do not use this flow if you can help it. I've really wanted to in the past for things like [my work on implementing OAuth](dms-oauth2.md/#trials-and-deprecations) for [Docker Mailserver](https://github.com/docker-mailserver/docker-mailserver) but it's just not the way.
 
 ## OpenID Connect (OIDC)
 

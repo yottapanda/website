@@ -46,7 +46,7 @@ As it turns out, there's a few gotchas when it comes to AWS networking. ZeroTier
 
 Here's a diagram which shows the desired network architecture:
 
-{{< mermaid >}}
+```mermaid
 graph LR
 subgraph AWS
 Lambda(Lambda) --> EC2(EC2 Instance)
@@ -55,7 +55,7 @@ EC2 -- ZeroTier --> Mac
 subgraph Client
 Mac(Mac Mini)
 end
-{{< /mermaid >}}
+```
 
 ## The AWS Side
 

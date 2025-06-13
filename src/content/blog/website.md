@@ -55,7 +55,7 @@ Since we want to deploy this site to a container environment (specifically docke
 ```dockerfile
 FROM klakegg/hugo AS build
 WORKDIR /build
-COPY . .
+COPY ../../../old/content/posts .
 RUN hugo
 
 FROM nginx:alpine

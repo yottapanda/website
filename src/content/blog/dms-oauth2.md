@@ -45,7 +45,7 @@ If you want a less coherent view of what went down, here's the [GitHub PR](https
 
 So I started the PR quite strong, utilizing the knowledge of those before me who commented on the [original issue](https://github.com/docker-mailserver/docker-mailserver/issues/2713). I setup DMS, Roundcube and Authentik like this:
 
-{{< mermaid >}}
+```mermaid
 sequenceDiagram
 actor User
 User ->> Roundcube: Request login 
@@ -57,7 +57,7 @@ Dovecot ->> Authentik: Validate Token
 Authentik ->> Dovecot: Respond with user info
 Dovecot ->> Roundcube: Respond with mailbox
 Roundcube ->> User: Display mailbox
-{{< /mermaid >}}
+```
 
 This is a standard OAuth flow, and worked quite well apart from 2 rather annoying issues:
 

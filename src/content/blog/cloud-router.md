@@ -44,12 +44,12 @@ Network Address Translation (NAT) is the protocol that allows one public IPv4 ad
 
 So what makes it _Carrier-Grade_? At it's core, CGNAT is just a second layer of NAT. Where your home router may use the usual private IPs such as `192.168.0.0/16` or `10.0.0.0/8`, CGNAT has the `100.0.0.0/8` range assigned to it. So it looks something like this:
 
-{{< mermaid >}}
+```mermaid
 graph LR
 A(Internet) <-- 0.0.0.0/0 --> B
 B(CGNAT Router) <-- 100.42.42.0/24 --> C
 C(Your Router) <-- 192.168.0.0/24 --> D(Your Server)
-{{< /mermaid >}}
+```
 
 Rather convoluted if you ask me!
 
@@ -65,14 +65,14 @@ We then forward all our packets via the new Cloud Router at which point we have 
 
 Confused? Yeah me too, so I made a diagram:
 
-{{< mermaid >}}
+```mermaid
 graph LR
 A(Internet) <-- 0.0.0.0/0 --> B
 B(CGNAT Router) <-- 100.42.42.0/24 --> C
 C(Your Router) <-- 192.168.0.0/24 --> D(Your Server)
 A <-- 0.0.0.0/0 --> Q(Cloud Router)
 Q <-- 10.69.69.0/24 --> D
-{{< /mermaid >}}
+```
 
 Physically, the Wireguard tunnel (10.69.69.0/24) goes over our existing CGNAT connection but logically, the CGNAT connection is abstracted away and isn't something we need to worry about just yet.
 

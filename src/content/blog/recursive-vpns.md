@@ -17,7 +17,7 @@ No, I haven't finally lost my marbles.
 \*_shakes head vigorously_\*  
 Yep, still there.
 
-Remember how [I said](cloud-router#linodes-extra-features) that you could probably link up a [Cloud Gateway](cloud-router) with your home router instead of straight to your server? Well, I finally racked up enough reasons to give the whole house a publicly routable IPv4 address instead of just my server. 
+Remember how [I said](cloud-router.md#linodes-extra-features) that you could probably link up a [Cloud Gateway](cloud-router.md) with your home router instead of straight to your server? Well, I finally racked up enough reasons to give the whole house a publicly routable IPv4 address instead of just my server. 
 
 1. My brother wanted to host a Minecraft server on his laptop 🙄.
 2. I need to re-setup a VPN to my internal network so my dad and I can reach our smart devices from the outside without exposing them publicly. This one pertains specifically to the title of this post 😉.
@@ -35,7 +35,7 @@ I like [Headscale](https://headscale.net/) even more, which is self-hosted, and 
 
 Firstly, I've set up a relatively simple Cloud Gateway, similar to what I described in my [other post](cloud-router.md). On top of that I've created another WireGuard server which acts as a tunnel into my internal network for trusted user devices like my phone when I'm out of the house. Let me draw it out for you:
 
-{{< mermaid >}}
+```mermaid
 graph LR
     Phone(My Phone)
     Internet[Internet]
@@ -58,7 +58,7 @@ graph LR
     CGNAT -.-> Router
     Router --> Server
     Router --- Laptop
-{{< /mermaid >}}
+```
 
 So that's terrible... Oh well, I'll try my best to explain it.
 
@@ -84,7 +84,7 @@ There are 3 entities involved in this dance of firewalls and VPNs that we'll be 
 
 To simplify the above diagram: The phone communicates with the gateway which, unbeknownst to the phone, forwards everything to the router.
 
-{{< mermaid >}}
+```mermaid
 graph LR
     Phone(My Phone)
     Gateway(Cloud Gateway)
@@ -94,7 +94,7 @@ graph LR
 
     Phone --> Gateway
     Gateway --> Router
-{{< /mermaid >}}
+```
 
 Between the Cloud Gateway and the Router, we'll set up a VPN connection called the **WAN VPN**; named so because it tunnels traffic from the open internet without discretion (depending on how you configure it).
 
@@ -254,7 +254,7 @@ This shouldn't have taken me so long to figure out and as usual, the solutions I
 
 More specifically, I've learned one or two things about the inner workings of iptables/nftables. Firstly, for context, I've drawn out the table and chain flow:
 
-{{< mermaid >}}
+```mermaid
 graph TD
     PacketIn(Inbound Packet)
 
@@ -332,7 +332,7 @@ graph TD
     RD3 --> OutFilter
     OutFilter --> ReleaseOutbound
     PostNat --> PacketOut
-{{< /mermaid >}}
+```
 
 I've adapted this diagram from [Phil Hagan's Version](https://stuffphilwrites.com/wp-content/uploads/2014/09/FW-IDS-iptables-Flowchart-v2019-04-30-1.png).
 
