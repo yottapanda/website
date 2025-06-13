@@ -20,7 +20,8 @@ export default defineConfig({
       theme: "css-variables",
     },
     rehypePlugins: [[rehypeMermaid, {
-      strategy: "img-svg"
+      strategy: "img-svg",
+      dark: true,
     }]],
   },
 });
