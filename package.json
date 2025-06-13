@@ -20,6 +20,8 @@
     "astro": "^5.9.2",
     "astro-pagefind": "^1.8.3",
     "clsx": "^2.1.1",
+    "rehype-mermaid": "^3.0.0",
+    "playwright": "^1.53.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3"
