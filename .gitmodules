@@ -1,4 +1,0 @@
-[submodule "themes/congo"]
-	path = themes/congo
-	url = https://github.com/yottapanda/congo.git
-	branch = custom

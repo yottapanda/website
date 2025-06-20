@@ -1,5 +1,0 @@
-services:
-  blog:
-    build: .
-    ports:
-      - 1313:80
