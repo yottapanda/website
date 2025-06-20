@@ -32,7 +32,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: website
+          name: github-pages
           path: ./public
           retention-days: 7
 
